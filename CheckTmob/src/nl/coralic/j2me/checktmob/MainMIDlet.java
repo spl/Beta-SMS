@@ -6,6 +6,8 @@ package nl.coralic.j2me.checktmob;
 
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
+import org.netbeans.microedition.lcdui.WaitScreen;
+import org.netbeans.microedition.util.SimpleCancellableTask;
 
 /**
  * @author Armin Čoralić
@@ -15,23 +17,36 @@ public class MainMIDlet extends MIDlet implements CommandListener
 
     private boolean midletPaused = false;
     private UserInfo user = new UserInfo();
+    WebConFull webFull = new WebConFull();
+    DataBean data = new DataBean();
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
+    private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
     private Form formShowData;
+    private StringItem saldo;
+    private StringItem editDate;
+    private StringItem aboType;
+    private StringItem otherKosts;
     private Form formSetLogin;
     private ChoiceGroup setSave;
     private TextField password;
     private TextField username;
     private Alert alertDataEmpty;
+    private WaitScreen logInWaitScreen;
+    private TextBox infoTextBox;
+    private Form infoForm;
+    private StringItem infoText;
     private Command exitCommand;
     private Command exitCommand1;
     private Command okCommand;
     private Command itemCommand1;
-    private Command itemCommand;
-    private Command itemCommand2;
+    private Command editUser;
+    private Command info;
     private Command exitCommand2;
     private Command okCommand1;
     private Command helpCommand;
+    private Command backCommand;
+    private SimpleCancellableTask runLogin;
     //</editor-fold>//GEN-END:|fields|0|
 
     /**
@@ -42,6 +57,22 @@ public class MainMIDlet extends MIDlet implements CommandListener
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Methods ">//GEN-BEGIN:|methods|0|
+    /**
+     * Switches a display to previous displayable of the current displayable.
+     * The <code>display</code> instance is obtain from the <code>getDisplay</code> method.
+     */
+    private void switchToPreviousDisplayable()
+    {
+        Displayable __currentDisplayable = getDisplay().getCurrent();
+        if (__currentDisplayable != null)
+        {
+            Displayable __nextDisplayable = (Displayable) __previousDisplayables.get(__currentDisplayable);
+            if (__nextDisplayable != null)
+            {
+                switchDisplayable(null, __nextDisplayable);
+            }
+        }
+    }
     //</editor-fold>//GEN-END:|methods|0|
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Method: initialize ">//GEN-BEGIN:|0-initialize|0|0-preInitialize
@@ -91,6 +122,11 @@ public class MainMIDlet extends MIDlet implements CommandListener
     {//GEN-END:|5-switchDisplayable|0|5-preSwitch
         // write pre-switch user code here
         Display display = getDisplay();//GEN-BEGIN:|5-switchDisplayable|1|5-postSwitch
+        Displayable __currentDisplayable = display.getCurrent();
+        if (__currentDisplayable != null  &&  nextDisplayable != null)
+        {
+            __previousDisplayables.put(nextDisplayable, __currentDisplayable);
+        }
         if (alert == null)
         {
             display.setCurrent(nextDisplayable);
@@ -113,7 +149,7 @@ public class MainMIDlet extends MIDlet implements CommandListener
         if (user.userExists())//GEN-BEGIN:|14-if|1|15-preAction
         {//GEN-END:|14-if|1|15-preAction
             // write pre-action user code here
-            switchDisplayable(null, getFormShowData());//GEN-LINE:|14-if|2|15-postAction
+            switchDisplayable(null, getLogInWaitScreen());//GEN-LINE:|14-if|2|15-postAction
         // write post-action user code here
         }//GEN-BEGIN:|14-if|3|16-preAction
         else
@@ -150,38 +186,56 @@ public class MainMIDlet extends MIDlet implements CommandListener
                 checkSubmitedData();//GEN-LINE:|7-commandAction|4|27-postAction
 
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|5|23-preAction
+            }//GEN-BEGIN:|7-commandAction|5|33-preAction
         }
         else if (displayable == formShowData)
         {
-            if (command == exitCommand)
-            {//GEN-END:|7-commandAction|5|23-preAction
+            if (command == editUser)
+            {//GEN-END:|7-commandAction|5|33-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|6|23-postAction
+                switchDisplayable(null, getFormSetLogin());//GEN-LINE:|7-commandAction|6|33-postAction
+                // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|7|23-preAction
+            else if (command == exitCommand)
+            {//GEN-END:|7-commandAction|7|23-preAction
+                // write pre-action user code here
+                exitMIDlet();//GEN-LINE:|7-commandAction|8|23-postAction
             // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|7|33-preAction
-            else if (command == itemCommand)
-            {//GEN-END:|7-commandAction|7|33-preAction
+            }//GEN-BEGIN:|7-commandAction|9|37-preAction
+            else if (command == info)
+            {//GEN-END:|7-commandAction|9|37-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|8|33-postAction
+                switchDisplayable(null, getInfoForm());//GEN-LINE:|7-commandAction|10|37-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|9|35-preAction
-            else if (command == itemCommand1)
-            {//GEN-END:|7-commandAction|9|35-preAction
+            }//GEN-BEGIN:|7-commandAction|11|124-preAction
+        }
+        else if (displayable == infoForm)
+        {
+            if (command == backCommand)
+            {//GEN-END:|7-commandAction|11|124-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|10|35-postAction
+                switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|12|124-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|11|37-preAction
-            else if (command == itemCommand2)
-            {//GEN-END:|7-commandAction|11|37-preAction
+            }//GEN-BEGIN:|7-commandAction|13|107-preAction
+        }
+        else if (displayable == logInWaitScreen)
+        {
+            if (command == WaitScreen.FAILURE_COMMAND)
+            {//GEN-END:|7-commandAction|13|107-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|12|37-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|13|7-postCommandAction
-        }//GEN-END:|7-commandAction|13|7-postCommandAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|14|107-postAction
+            // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|15|106-preAction
+            else if (command == WaitScreen.SUCCESS_COMMAND)
+            {//GEN-END:|7-commandAction|15|106-preAction
+                // write pre-action user code here
+                switchDisplayable(null, getFormShowData());//GEN-LINE:|7-commandAction|16|106-postAction
+            // write post-action user code here
+            }//GEN-BEGIN:|7-commandAction|17|7-postCommandAction
+        }//GEN-END:|7-commandAction|17|7-postCommandAction
     // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|14|
-    //</editor-fold>//GEN-END:|7-commandAction|14|
+    }//GEN-BEGIN:|7-commandAction|18|
+    //</editor-fold>//GEN-END:|7-commandAction|18|
 
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: formShowData ">//GEN-BEGIN:|17-getter|0|17-preInit
@@ -193,14 +247,14 @@ public class MainMIDlet extends MIDlet implements CommandListener
     {
         if (formShowData == null)
         {//GEN-END:|17-getter|0|17-preInit
-            // write pre-init user code here
-            formShowData = new Form("Data", new Item[] { });//GEN-BEGIN:|17-getter|1|17-postInit
+
+            formShowData = new Form("Data", new Item[] { getEditDate(), getAboType(), getSaldo(), getOtherKosts() });//GEN-BEGIN:|17-getter|1|17-postInit
             formShowData.addCommand(getExitCommand());
-            formShowData.addCommand(getItemCommand());
-            formShowData.addCommand(getItemCommand1());
-            formShowData.addCommand(getItemCommand2());
+            formShowData.addCommand(getEditUser());
+            formShowData.addCommand(getInfo());
             formShowData.setCommandListener(this);//GEN-END:|17-getter|1|17-postInit
         // write post-init user code here
+
         }//GEN-BEGIN:|17-getter|2|
         return formShowData;
     }
@@ -277,20 +331,20 @@ public class MainMIDlet extends MIDlet implements CommandListener
     }
     //</editor-fold>//GEN-END:|26-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: itemCommand ">//GEN-BEGIN:|32-getter|0|32-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: editUser ">//GEN-BEGIN:|32-getter|0|32-preInit
     /**
-     * Returns an initiliazed instance of itemCommand component.
+     * Returns an initiliazed instance of editUser component.
      * @return the initialized component instance
      */
-    public Command getItemCommand()
+    public Command getEditUser()
     {
-        if (itemCommand == null)
+        if (editUser == null)
         {//GEN-END:|32-getter|0|32-preInit
             // write pre-init user code here
-            itemCommand = new Command("Item", Command.ITEM, 0);//GEN-LINE:|32-getter|1|32-postInit
+            editUser = new Command("EditUser", Command.ITEM, 0);//GEN-LINE:|32-getter|1|32-postInit
         // write post-init user code here
         }//GEN-BEGIN:|32-getter|2|
-        return itemCommand;
+        return editUser;
     }
     //</editor-fold>//GEN-END:|32-getter|2|
 
@@ -311,20 +365,20 @@ public class MainMIDlet extends MIDlet implements CommandListener
     }
     //</editor-fold>//GEN-END:|34-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: itemCommand2 ">//GEN-BEGIN:|36-getter|0|36-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: info ">//GEN-BEGIN:|36-getter|0|36-preInit
     /**
-     * Returns an initiliazed instance of itemCommand2 component.
+     * Returns an initiliazed instance of info component.
      * @return the initialized component instance
      */
-    public Command getItemCommand2()
+    public Command getInfo()
     {
-        if (itemCommand2 == null)
+        if (info == null)
         {//GEN-END:|36-getter|0|36-preInit
             // write pre-init user code here
-            itemCommand2 = new Command("Item", Command.ITEM, 0);//GEN-LINE:|36-getter|1|36-postInit
+            info = new Command("Info", Command.ITEM, 0);//GEN-LINE:|36-getter|1|36-postInit
         // write post-init user code here
         }//GEN-BEGIN:|36-getter|2|
-        return itemCommand2;
+        return info;
     }
     //</editor-fold>//GEN-END:|36-getter|2|
 
@@ -465,18 +519,204 @@ public class MainMIDlet extends MIDlet implements CommandListener
         if (user.checkSubmitedData(getUsername().getString(), getPassword().getString(), getSetSave().isSelected(0)))//GEN-BEGIN:|90-if|1|91-preAction
         {//GEN-END:|90-if|1|91-preAction
             // write pre-action user code here
-            switchDisplayable(null, getFormShowData());//GEN-LINE:|90-if|2|91-postAction
-            // write post-action user code here
+            switchDisplayable(null, getLogInWaitScreen());//GEN-LINE:|90-if|2|91-postAction
+        // write post-action user code here
         }//GEN-BEGIN:|90-if|3|92-preAction
         else
         {//GEN-END:|90-if|3|92-preAction
             // write pre-action user code here
             switchDisplayable(null, getAlertDataEmpty());//GEN-LINE:|90-if|4|92-postAction
-            // write post-action user code here
+        // write post-action user code here
         }//GEN-LINE:|90-if|5|90-postIf
-        // enter post-if user code here
+    // enter post-if user code here
     }//GEN-BEGIN:|90-if|6|
     //</editor-fold>//GEN-END:|90-if|6|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: runLogin ">//GEN-BEGIN:|100-getter|0|100-preInit
+    /**
+     * Returns an initiliazed instance of runLogin component.
+     * @return the initialized component instance
+     */
+    public SimpleCancellableTask getRunLogin()
+    {
+        if (runLogin == null)
+        {//GEN-END:|100-getter|0|100-preInit
+            // write pre-init user code here
+            runLogin = new SimpleCancellableTask();//GEN-BEGIN:|100-getter|1|100-execute
+            runLogin.setExecutable(new org.netbeans.microedition.util.Executable()
+            {
+                public void execute() throws Exception
+                {//GEN-END:|100-getter|1|100-execute
+                    Logger.debug("Filled username en password: " + user.getUsername() + " " + user.getPassword(), MainMIDlet.class);
+                    webFull.start(user);
+                    webFull.getSaldoData(data);
+                }//GEN-BEGIN:|100-getter|2|100-postInit
+            });//GEN-END:|100-getter|2|100-postInit
+        // write post-init user code here
+        }//GEN-BEGIN:|100-getter|3|
+        return runLogin;
+    }
+    //</editor-fold>//GEN-END:|100-getter|3|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: saldo ">//GEN-BEGIN:|104-getter|0|104-preInit
+    /**
+     * Returns an initiliazed instance of saldo component.
+     * @return the initialized component instance
+     */
+    public StringItem getSaldo()
+    {
+        if (saldo == null)
+        {//GEN-END:|104-getter|0|104-preInit
+            // write pre-init user code here
+            saldo = new StringItem("Saldo", data.getSaldo());//GEN-LINE:|104-getter|1|104-postInit
+        // write post-init user code here
+        }//GEN-BEGIN:|104-getter|2|
+        return saldo;
+    }
+    //</editor-fold>//GEN-END:|104-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: logInWaitScreen ">//GEN-BEGIN:|105-getter|0|105-preInit
+    /**
+     * Returns an initiliazed instance of logInWaitScreen component.
+     * @return the initialized component instance
+     */
+    public WaitScreen getLogInWaitScreen()
+    {
+        if (logInWaitScreen == null)
+        {//GEN-END:|105-getter|0|105-preInit
+            // write pre-init user code here
+            logInWaitScreen = new WaitScreen(getDisplay());//GEN-BEGIN:|105-getter|1|105-postInit
+            logInWaitScreen.setTitle("Loging in");
+            logInWaitScreen.setCommandListener(this);
+            logInWaitScreen.setFullScreenMode(true);
+            logInWaitScreen.setText("Loging in please wait......");
+            logInWaitScreen.setTask(getRunLogin());//GEN-END:|105-getter|1|105-postInit
+        // write post-init user code here
+        }//GEN-BEGIN:|105-getter|2|
+        return logInWaitScreen;
+    }
+    //</editor-fold>//GEN-END:|105-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: editDate ">//GEN-BEGIN:|112-getter|0|112-preInit
+    /**
+     * Returns an initiliazed instance of editDate component.
+     * @return the initialized component instance
+     */
+    public StringItem getEditDate()
+    {
+        if (editDate == null)
+        {//GEN-END:|112-getter|0|112-preInit
+            // write pre-init user code here
+            editDate = new StringItem("Edit date", data.getDate());//GEN-LINE:|112-getter|1|112-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|112-getter|2|
+        return editDate;
+    }
+    //</editor-fold>//GEN-END:|112-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: aboType ">//GEN-BEGIN:|113-getter|0|113-preInit
+    /**
+     * Returns an initiliazed instance of aboType component.
+     * @return the initialized component instance
+     */
+    public StringItem getAboType()
+    {
+        if (aboType == null)
+        {//GEN-END:|113-getter|0|113-preInit
+            // write pre-init user code here
+            aboType = new StringItem("Abo type", data.getAbo_type());//GEN-LINE:|113-getter|1|113-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|113-getter|2|
+        return aboType;
+    }
+    //</editor-fold>//GEN-END:|113-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: otherKosts ">//GEN-BEGIN:|115-getter|0|115-preInit
+    /**
+     * Returns an initiliazed instance of otherKosts component.
+     * @return the initialized component instance
+     */
+    public StringItem getOtherKosts()
+    {
+        if (otherKosts == null)
+        {//GEN-END:|115-getter|0|115-preInit
+            // write pre-init user code here
+            otherKosts = new StringItem("Other kosts", data.getOther_kosts());//GEN-LINE:|115-getter|1|115-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|115-getter|2|
+        return otherKosts;
+    }
+    //</editor-fold>//GEN-END:|115-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: infoTextBox ">//GEN-BEGIN:|116-getter|0|116-preInit
+    /**
+     * Returns an initiliazed instance of infoTextBox component.
+     * @return the initialized component instance
+     */
+    public TextBox getInfoTextBox()
+    {
+        if (infoTextBox == null)
+        {//GEN-END:|116-getter|0|116-preInit
+            // write pre-init user code here
+            infoTextBox = new TextBox("Info CheckTmob", "This application is made by Armin Coralic. Visit http://j2me.coralic.nl for new versions. You can contact me at: j2me @ coralic . nl", 132, TextField.ANY);//GEN-LINE:|116-getter|1|116-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|116-getter|2|
+        return infoTextBox;
+    }
+    //</editor-fold>//GEN-END:|116-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: infoForm ">//GEN-BEGIN:|120-getter|0|120-preInit
+    /**
+     * Returns an initiliazed instance of infoForm component.
+     * @return the initialized component instance
+     */
+    public Form getInfoForm()
+    {
+        if (infoForm == null)
+        {//GEN-END:|120-getter|0|120-preInit
+            // write pre-init user code here
+            infoForm = new Form("Info CheckTmob", new Item[] { getInfoText() });//GEN-BEGIN:|120-getter|1|120-postInit
+            infoForm.addCommand(getBackCommand());
+            infoForm.setCommandListener(this);//GEN-END:|120-getter|1|120-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|120-getter|2|
+        return infoForm;
+    }
+    //</editor-fold>//GEN-END:|120-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: infoText ">//GEN-BEGIN:|121-getter|0|121-preInit
+    /**
+     * Returns an initiliazed instance of infoText component.
+     * @return the initialized component instance
+     */
+    public StringItem getInfoText()
+    {
+        if (infoText == null)
+        {//GEN-END:|121-getter|0|121-preInit
+            // write pre-init user code here
+            infoText = new StringItem("", "This application is made by Armin Coralic. Visit http://j2me.coralic.nl for new versions. You can contact me at: j2me @ coralic . nl");//GEN-LINE:|121-getter|1|121-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|121-getter|2|
+        return infoText;
+    }
+    //</editor-fold>//GEN-END:|121-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: backCommand ">//GEN-BEGIN:|123-getter|0|123-preInit
+    /**
+     * Returns an initiliazed instance of backCommand component.
+     * @return the initialized component instance
+     */
+    public Command getBackCommand()
+    {
+        if (backCommand == null)
+        {//GEN-END:|123-getter|0|123-preInit
+            // write pre-init user code here
+            backCommand = new Command("Back", Command.BACK, 0);//GEN-LINE:|123-getter|1|123-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|123-getter|2|
+        return backCommand;
+    }
+    //</editor-fold>//GEN-END:|123-getter|2|
 
     /**
      * Returns a display instance.

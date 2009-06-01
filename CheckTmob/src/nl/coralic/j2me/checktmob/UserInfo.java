@@ -18,7 +18,7 @@ public class UserInfo
 
     public boolean userExists()
     {
-        System.out.println("Check if user exists.");
+        Logger.debug("Check if user exists.", UserInfo.class);
         RecordStore rs = db.openRecStore();
         if(rs == null)
         {

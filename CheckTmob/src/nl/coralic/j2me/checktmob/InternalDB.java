@@ -23,7 +23,7 @@ public class InternalDB
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Logger.error(e, InternalDB.class);
             return null;
         }
     }
@@ -33,14 +33,15 @@ public class InternalDB
         try
         {
             String[] returnData = new String[2];
+            Logger.debug("DB has " + rs.getNumRecords() + " records",InternalDB.class);
             if (rs.getNumRecords() <= 0)
             {
-                System.out.println("DB has no data.");
+                Logger.debug("DB has no data.",InternalDB.class);
                 return null;
             }
             if (rs.getNumRecords() > 2)
             {
-                System.out.println("DB has to much data.");
+                Logger.debug("DB has to much data.",InternalDB.class);
                 return null;
             }
             byte[] recData = new byte[10];
@@ -53,13 +54,14 @@ public class InternalDB
                 }
 
                 len = rs.getRecord(i, recData, 0);
-                returnData[i] = new String(recData, 0, len);
+                returnData[i-1] = new String(recData, 0, len);
+                Logger.debug("Read data: " + returnData[i-1],InternalDB.class);
             }
             return returnData;
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Logger.error(e, InternalDB.class);
             return null;
         }
     }
@@ -72,7 +74,7 @@ public class InternalDB
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Logger.error(e, InternalDB.class);
         }
     }
 
@@ -86,7 +88,7 @@ public class InternalDB
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                Logger.error(e, InternalDB.class);
             }
         }
     }
@@ -101,7 +103,7 @@ public class InternalDB
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Logger.error(e, InternalDB.class);
         }
     }
 }
