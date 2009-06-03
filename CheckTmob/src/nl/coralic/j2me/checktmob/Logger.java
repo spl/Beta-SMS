@@ -17,7 +17,7 @@ import javax.microedition.io.file.FileConnection;
 public class Logger
 {
 
-    private static final boolean log = true;
+    private static final boolean log = false;
     private static final String DEBUG = "Debug";
     private static final String ERROR = "Error";
 
