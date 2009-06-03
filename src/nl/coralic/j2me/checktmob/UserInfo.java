@@ -4,23 +4,38 @@
  */
 package nl.coralic.j2me.checktmob;
 
+import javax.microedition.rms.RecordStore;
+
 /**
  *
  * @author Armin Čoralić
  */
 public class UserInfo
 {
-
     private String username = "";
     private String password = "";
+    private InternalDB db = new InternalDB();
 
     public boolean userExists()
     {
-        /**
-         * TODO:
-         * Check if user data is saved if so read it and return true
-         */
-        return false;
+        Logger.debug("Check if user exists.", UserInfo.class);
+        RecordStore rs = db.openRecStore();
+        if(rs == null)
+        {
+            //something went wrong while opening DB
+            return false;
+        }
+        String[] tmpData = db.readRecords(rs);
+        if(tmpData == null)
+        {
+            db.closeRecStore(rs);
+            //no data
+            return false;
+        }
+        setUsername(tmpData[0]);
+        setPassword(tmpData[1]);
+        db.closeRecStore(rs);
+        return true;
     }
 
     public boolean checkSubmitedData(String tmpUsername, String tmpPassword, boolean save)
@@ -29,28 +44,26 @@ public class UserInfo
         {
             return false;
         }
-        if (tmpPassword.equalsIgnoreCase(username))
+        if (tmpPassword.equalsIgnoreCase(""))
         {
             return false;
         }
         if(!save)
         {
-            /**
-             * TODO:
-             * Proceed
-             */
+            setUsername(tmpUsername);
+            setPassword(tmpPassword);
             return true;
         }
         else
         {
-            /**
-             * TODO:
-             * Save data and then proceed
-             */
+            setUsername(tmpUsername);
+            setPassword(tmpPassword);
+            db.deleteRecStore();
+            RecordStore rs = db.openRecStore();
+            db.writeRecord(rs, getUsername());
+            db.writeRecord(rs, getPassword());
             return true;
         }
-        
-
     }
 
     public String getPassword()
