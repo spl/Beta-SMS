@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/WCDSMS" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:layout_weight="1">
+	<TableLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<TableRow>
+			<TextView android:id="@+id/lblTo" android:text="@string/EN_TO" />
+			<EditText android:id="@+id/txtTo" android:inputType="phone"
+				android:hint="@string/EN_TO_HINT" />
+		</TableRow>
+		<TableRow>
+			<TextView android:id="@+id/lblText" android:text="@string/EN_TEXT" />
+			<EditText android:id="@+id/txtText" android:hint="@string/EN_TEXT_HINT"
+				android:maxLength="160" android:maxEms="10" />
+		</TableRow>
+		<TableRow>
+			<Button android:id="@+id/btnSend" android:text="@string/EN_SEND" />
+		</TableRow>
+		<TableRow>
+			<TextView android:id="@+id/lblUsername" android:text="@string/EN_USER" />
+			<EditText android:id="@+id/txtUsername" android:inputType="text" />
+		</TableRow>
+		<TableRow>
+			<TextView android:id="@+id/lblPassword" android:text="@string/EN_PASS" />
+			<EditText android:id="@+id/txtPassword" android:inputType="textPassword" />
+		</TableRow>
+		<TableRow>
+			<CheckBox android:id="@+id/chkUsrPass" android:text="@string/EN_SAVE" />
+		</TableRow>
+		<TableRow>
+			<TextView android:id="@+id/lblFrom" android:text="@string/EN_FROM" />
+			<EditText android:id="@+id/txtFrom" android:hint="@string/EN_FROM_HINT"
+				android:inputType="text" />
+		</TableRow>
+		<TableRow>
+			<CheckBox android:id="@+id/chkFrom" android:text="@string/EN_SAVE" />
+		</TableRow>
+		<TableRow>
+			<TextView android:id="@+id/lblUrl" android:text="@string/EN_URL" />
+			<EditText android:id="@+id/txtUrl" android:hint="@string/EN_URL_HINT"
+				android:inputType="text" />
+		</TableRow>
+		<TableRow>
+			<CheckBox android:id="@+id/chkUrl" android:text="@string/EN_SAVE" />
+		</TableRow>
+	</TableLayout>
+</ScrollView>
