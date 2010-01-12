@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Beta-SMS</string>
+    <string name="EN_TO">To:</string>
+    <string name="EN_TO_HINT">Double tap for contacts</string>
+    <string name="EN_TEXT">Text:</string>
+    <string name="EN_TEXT_HINT">Your SMS text goes here..</string>
+    <string name="EN_SEND">SEND</string>
+    <string name="EN_USER">Username:</string>
+    <string name="EN_PASS">Password:</string>
+    <string name="EN_SAVE">Save</string>
+    <string name="EN_FROM">From:</string>
+    <string name="EN_FROM_HINT">Your nick or cell number</string>
+    <string name="EN_URL">URL:</string>
+    <string name="EN_URL_HINT">www.webcalldirect.com</string>
+</resources>
