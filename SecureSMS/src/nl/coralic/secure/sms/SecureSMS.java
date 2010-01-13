@@ -1,8 +1,11 @@
 package nl.coralic.secure.sms;
 
+import java.util.ArrayList;
+
 import nl.coralic.secure.sms.utils.Const;
 import nl.coralic.secure.sms.utils.Contact;
 import nl.coralic.secure.sms.utils.ContactsHandler;
+import nl.coralic.secure.sms.utils.EncryptionHandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -11,12 +14,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Contacts.People;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -178,6 +184,89 @@ public class SecureSMS extends Activity
         }, new IntentFilter(DELIVERED));        
     	
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(to.getText().toString(), null, text.getText().toString(), sentPI, deliveredPI); 
+        String msg = "";
+        try
+		{
+        	msg = EncryptionHandler.encrypt(pincode.getText().toString(), text.getText().toString());	
+        	Log.d(Const.TAG_MAIN, "Size: " + msg.length());
+		}
+		catch (Exception e)
+		{
+			Log.d(Const.TAG_MAIN, e.getMessage());
+		} 
+		sms.sendTextMessage(to.getText().toString(), null, msg, sentPI, deliveredPI);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+		menu.add("Info");
+		menu.add("Read");
+		menu.add("Exit");
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+
+		if (item.hasSubMenu() == false)
+		{
+			if (item.getTitle().toString().equalsIgnoreCase("Exit"))
+			{
+				this.finish();
+			}
+			if (item.getTitle().toString().equalsIgnoreCase("Info"))
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("Info");
+				builder.setMessage("This application is made by Armin Čoralić. Visit me at http://blog.coralic.nl");
+				builder.setPositiveButton("Close", null);
+				builder.create();
+				builder.show();
+			}
+			if (item.getTitle().toString().equalsIgnoreCase("Read"))
+			{
+				readSms();
+			}
+		}
+		return true;
+	}
+	
+	public void readSms()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Show SMS");
+		builder.setPositiveButton("Oke", null);
+		Uri sms = Uri.parse("content://sms");
+		Cursor c = getContentResolver().query(sms, null, null, null, null);
+        String[] test = c.getColumnNames();
+        ArrayList<String> list = new ArrayList<String>();
+		if (c.moveToFirst())
+		{
+			while (!c.isAfterLast())
+			{
+				Log.d("Armin","Body: " + c.getString(c.getColumnIndex("body")));
+			
+				try
+				{
+					list.add(EncryptionHandler.decrypt("1234", c.getString(c.getColumnIndex("body"))));
+					
+				}
+				catch (Exception e)
+				{
+					Log.d(Const.TAG_MAIN, e.getMessage());
+					e.printStackTrace();
+				}
+				
+				c.moveToNext();
+			}
+		}  
+
+		String tmpStr[] = new String[list.size()];
+		list.toArray(tmpStr);
+		builder.setItems(tmpStr,null);
+		AlertDialog testDialog = builder.create();
+		testDialog.show();
 	}
 }
