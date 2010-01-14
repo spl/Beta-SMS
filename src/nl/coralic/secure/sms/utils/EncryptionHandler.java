@@ -8,7 +8,9 @@ package nl.coralic.secure.sms.utils;
  import javax.crypto.Cipher;  
  import javax.crypto.KeyGenerator;  
  import javax.crypto.SecretKey;  
- import javax.crypto.spec.SecretKeySpec;  
+import javax.crypto.spec.SecretKeySpec;  
+
+import android.util.Log;
    
  /** 
   * Usage: 
@@ -28,7 +30,7 @@ package nl.coralic.secure.sms.utils;
      }  
        
      public static String decrypt(String seed, String encrypted) throws Exception {  
-         byte[] rawKey = getRawKey(seed.getBytes());  
+         byte[] rawKey = getRawKey(seed.getBytes()); 
          byte[] enc = toByte(encrypted);  
          byte[] result = decrypt(rawKey, enc);  
          return new String(result);  

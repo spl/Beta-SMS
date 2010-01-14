@@ -3,3 +3,4 @@
 - Use a more effective encryption
 - Investigate option for using PGP
 - Create a nicer GUI
+- Show encrypted SMS only
