@@ -1,0 +1,5 @@
+- Create a more generic ContactsHandler so that it's possible to use all data from Contacts class
+- ContactsHandler should be able to find contact in different ways, like phone number, name etc..
+- Better errorhandling with send, give users the correct error's retrived from the server
+- Use the database efficiently
+- Create a better GUI
