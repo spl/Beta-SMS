@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:id="@+id/SecureSMS_Read">
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/EN_TO"
+		android:id="@+id/lblPhoneNo" />
+	<EditText android:id="@+id/txtPhoneNo" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:hint="@string/EN_TO_HINT" />
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/EN_PINCODE"
+		android:id="@+id/lblPincode" />
+	<EditText android:id="@+id/txtPincode" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:inputType="number" />
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/EN_TEXT"
+		android:id="@+id/lblMessage" />
+	<EditText android:id="@+id/txtMessage" android:layout_width="fill_parent"
+		android:layout_height="150px" android:gravity="top" android:maxLength="70" />
+	<Button android:id="@+id/btnSendSMS" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/EN_SEND" />
+</LinearLayout>

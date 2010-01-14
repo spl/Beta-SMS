@@ -1,7 +1,5 @@
 package nl.coralic.secure.sms;
 
-import java.util.ArrayList;
-
 import nl.coralic.secure.sms.utils.Const;
 import nl.coralic.secure.sms.utils.Contact;
 import nl.coralic.secure.sms.utils.ContactsHandler;
@@ -14,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +27,7 @@ import android.widget.Toast;
 
 public class SecureSMS extends Activity
 {
+	private static final int ACTIVITY_CREATE=0;
 	EditText to;
 	EditText pincode;
 	EditText text;
@@ -39,19 +37,19 @@ public class SecureSMS extends Activity
 	AlertDialog chooseNumberAlert;
 	String pin;
 	Button send;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.send);
 
 		to = (EditText) findViewById(R.id.txtPhoneNo);
 		pincode = (EditText) findViewById(R.id.txtPincode);
 		text = (EditText) findViewById(R.id.txtMessage);
 		send = (Button) findViewById(R.id.btnSendSMS);
-		
+
 		// Set the intent
 		intent = new Intent(Intent.ACTION_PICK, People.CONTENT_URI);
 
@@ -63,7 +61,7 @@ public class SecureSMS extends Activity
 				startActivityForResult(intent, Const.PICK_CONTACT);
 			}
 		});
-		
+
 		send.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v)
@@ -72,7 +70,7 @@ public class SecureSMS extends Activity
 			}
 		});
 	}
-	
+
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data)
 	{
@@ -99,7 +97,7 @@ public class SecureSMS extends Activity
 			task.execute(data.getData());
 		}
 	}
-	
+
 	private void chooseNumber(Contact contact)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -113,7 +111,7 @@ public class SecureSMS extends Activity
 			public void onClick(DialogInterface dialog, int item)
 			{
 				to.setText(numbers[item]);
-				if(!pin.equalsIgnoreCase(""))
+				if (!pin.equalsIgnoreCase(""))
 				{
 					pincode.setText(pin);
 				}
@@ -123,80 +121,75 @@ public class SecureSMS extends Activity
 		chooseNumberAlert = builder.create();
 		chooseNumberAlert.show();
 	}
-	
+
 	public void onSend()
 	{
-    	String SENT = "SMS_SENT";
-    	String DELIVERED = "SMS_DELIVERED";
-    	
-        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
-            new Intent(SENT), 0);
-        
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
-            new Intent(DELIVERED), 0);
-    	
-        //---when the SMS has been sent---
-        registerReceiver(new BroadcastReceiver(){
-			@Override
-			public void onReceive(Context arg0, Intent arg1) {
-				switch (getResultCode())
-				{
-				    case Activity.RESULT_OK:
-					    Toast.makeText(getBaseContext(), "SMS sent", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;
-				    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-					    Toast.makeText(getBaseContext(), "Generic failure", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;
-				    case SmsManager.RESULT_ERROR_NO_SERVICE:
-					    Toast.makeText(getBaseContext(), "No service", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;
-				    case SmsManager.RESULT_ERROR_NULL_PDU:
-					    Toast.makeText(getBaseContext(), "Null PDU", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;
-				    case SmsManager.RESULT_ERROR_RADIO_OFF:
-					    Toast.makeText(getBaseContext(), "Radio off", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;
-				}
-			}
-        }, new IntentFilter(SENT));
-        
-        //---when the SMS has been delivered---
-        registerReceiver(new BroadcastReceiver(){
-			@Override
-			public void onReceive(Context arg0, Intent arg1) {
-				switch (getResultCode())
-				{
-				    case Activity.RESULT_OK:
-					    Toast.makeText(getBaseContext(), "SMS delivered", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;
-				    case Activity.RESULT_CANCELED:
-					    Toast.makeText(getBaseContext(), "SMS not delivered", 
-					    		Toast.LENGTH_SHORT).show();
-					    break;					    
-				}
-			}
-        }, new IntentFilter(DELIVERED));        
-    	
-        SmsManager sms = SmsManager.getDefault();
-        String msg = "";
-        try
+		String SENT = "SMS_SENT";
+		String DELIVERED = "SMS_DELIVERED";
+
+		PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
+
+		PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
+
+		// ---when the SMS has been sent---
+		registerReceiver(new BroadcastReceiver()
 		{
-        	msg = EncryptionHandler.encrypt(pincode.getText().toString(), text.getText().toString());	
-        	Log.d(Const.TAG_MAIN, "Size: " + msg.length());
+			@Override
+			public void onReceive(Context arg0, Intent arg1)
+			{
+				switch (getResultCode())
+				{
+					case Activity.RESULT_OK:
+						Toast.makeText(getBaseContext(), "SMS sent", Toast.LENGTH_SHORT).show();
+						break;
+					case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+						Toast.makeText(getBaseContext(), "Generic failure", Toast.LENGTH_SHORT).show();
+						break;
+					case SmsManager.RESULT_ERROR_NO_SERVICE:
+						Toast.makeText(getBaseContext(), "No service", Toast.LENGTH_SHORT).show();
+						break;
+					case SmsManager.RESULT_ERROR_NULL_PDU:
+						Toast.makeText(getBaseContext(), "Null PDU", Toast.LENGTH_SHORT).show();
+						break;
+					case SmsManager.RESULT_ERROR_RADIO_OFF:
+						Toast.makeText(getBaseContext(), "Radio off", Toast.LENGTH_SHORT).show();
+						break;
+				}
+			}
+		}, new IntentFilter(SENT));
+
+		// ---when the SMS has been delivered---
+		registerReceiver(new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context arg0, Intent arg1)
+			{
+				switch (getResultCode())
+				{
+					case Activity.RESULT_OK:
+						Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_SHORT).show();
+						break;
+					case Activity.RESULT_CANCELED:
+						Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
+						break;
+				}
+			}
+		}, new IntentFilter(DELIVERED));
+
+		SmsManager sms = SmsManager.getDefault();
+		String msg = "";
+		try
+		{
+			msg = EncryptionHandler.encrypt(pincode.getText().toString(), text.getText().toString());
+			Log.d(Const.TAG_MAIN, "Size: " + msg.length());
 		}
 		catch (Exception e)
 		{
 			Log.d(Const.TAG_MAIN, e.getMessage());
-		} 
+		}
 		sms.sendTextMessage(to.getText().toString(), null, msg, sentPI, deliveredPI);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -227,46 +220,12 @@ public class SecureSMS extends Activity
 			}
 			if (item.getTitle().toString().equalsIgnoreCase("Read"))
 			{
-				readSms();
+		        Intent i = new Intent(this, SecureSMSRead.class);
+		        startActivityForResult(i, ACTIVITY_CREATE);
 			}
 		}
 		return true;
 	}
-	
-	public void readSms()
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Show SMS");
-		builder.setPositiveButton("Oke", null);
-		Uri sms = Uri.parse("content://sms");
-		Cursor c = getContentResolver().query(sms, null, null, null, null);
-        String[] test = c.getColumnNames();
-        ArrayList<String> list = new ArrayList<String>();
-		if (c.moveToFirst())
-		{
-			while (!c.isAfterLast())
-			{
-				Log.d("Armin","Body: " + c.getString(c.getColumnIndex("body")));
-			
-				try
-				{
-					list.add(EncryptionHandler.decrypt("1234", c.getString(c.getColumnIndex("body"))));
-					
-				}
-				catch (Exception e)
-				{
-					Log.d(Const.TAG_MAIN, e.getMessage());
-					e.printStackTrace();
-				}
-				
-				c.moveToNext();
-			}
-		}  
 
-		String tmpStr[] = new String[list.size()];
-		list.toArray(tmpStr);
-		builder.setItems(tmpStr,null);
-		AlertDialog testDialog = builder.create();
-		testDialog.show();
-	}
+
 }

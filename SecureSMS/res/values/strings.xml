@@ -2,4 +2,9 @@
 <resources>
     <string name="hello">Hello World, SecureSMS!</string>
     <string name="app_name">SecureSMS</string>
+    <string name="EN_TO">Enter the phone number of recipient:</string>
+    <string name="EN_TO_HINT">Double tap for contacts</string>
+    <string name="EN_PINCODE">Enter the pincode:</string>
+    <string name="EN_TEXT">Message:</string>
+    <string name="EN_SEND">Send SMS</string>
 </resources>
