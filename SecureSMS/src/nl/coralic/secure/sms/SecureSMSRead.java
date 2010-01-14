@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ public class SecureSMSRead extends Activity
 	LinearLayout ll;
 	HashMap<String, String> map;
 	AlertDialog pin;
+	String id = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -49,14 +51,10 @@ public class SecureSMSRead extends Activity
 		{
 			while (!c.isAfterLast())
 			{
-				String[] names = c.getColumnNames();
-				for (int i = 0; i < names.length; i++)
-				{
-					map.put(names[i], c.getString(c.getColumnIndex(names[i])));
-				}
+				map.put(c.getString(c.getColumnIndex("_id")), c.getString(c.getColumnIndex("body")));
+
 				TextView tx = new TextView(this);
-				// 
-				tx.setText(c.getString(c.getColumnIndex("address")) + " "
+				tx.setText(c.getString(c.getColumnIndex("_id")) + " " + c.getString(c.getColumnIndex("address")) + " "
 						+ new Date(Long.parseLong(c.getString(c.getColumnIndex("date")))).toLocaleString());
 				tx.setOnClickListener(new View.OnClickListener()
 				{
@@ -108,21 +106,26 @@ public class SecureSMSRead extends Activity
 
 	public String getPhonenumber(String text)
 	{
-		String tmp = text.substring(0, text.indexOf(" "));
-		return removeEverything(tmp);
+		id = text.substring(0, text.indexOf(" "));
+		String tmpNumber = text.substring(text.indexOf(" "));
+		tmpNumber = text.substring(0, text.indexOf(" "));
+		return removeEverything(tmpNumber);
 	}
 
 	public void showSmsAsAlert(String pincode)
 	{
+		Log.d("Armin", "pincode: " + pincode);
+		Log.d("Armin", "body: " + map.get("body"));
 		String enc = "";
 		try
 		{
-			enc = EncryptionHandler.decrypt(pincode, map.get("body"));
+			enc = EncryptionHandler.decrypt(pincode, map.get(id));
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+		Log.d("Armin", "enc: " + enc);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("SMS");
 		builder.setMessage(enc);
@@ -130,10 +133,10 @@ public class SecureSMSRead extends Activity
 		builder.create();
 		builder.show();
 	}
-	
+
 	public void readPincodeAlert()
 	{
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Pincode");
 		builder.setMessage("Fill in your pincode:");
@@ -144,7 +147,7 @@ public class SecureSMSRead extends Activity
 		{
 			public void onClick(DialogInterface d, int i)
 			{
-				showSmsAsAlert(((EditText)pin.findViewById(9191)).getText().toString());
+				showSmsAsAlert(((EditText) pin.findViewById(9191)).getText().toString());
 				pin.dismiss();
 			}
 		});
