@@ -3,3 +3,4 @@
 - Better errorhandling with send, give users the correct error's retrived from the server
 - Use the database efficiently
 - Create a better GUI
+- Add the send SMS to the messages in android for easier readability
