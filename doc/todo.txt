@@ -1,6 +1,6 @@
-- Create a more generic ContactsHandler so that it's possible to use all data from Contacts class
-- ContactsHandler should be able to find contact in different ways, like phone number, name etc..
-- Better errorhandling with send, give users the correct error's retrived from the server
-- Use the database efficiently
-- Create a better GUI
 - Add the send SMS to the messages in android for easier readability
+- Allow debug information to be send to google cloud, for better problem solving
+- Allow people to send suggestions, (send it to google cloud)
+- Multi language?
+- Send to multiple contacts at the same time
+- Allow SMS typing in "messages" but trigger Beta-SMS to send over the internet

@@ -4,7 +4,7 @@
     <string name="EN_TO">To:</string>
     <string name="EN_TO_HINT">Double tap for contacts</string>
     <string name="EN_TEXT">Text:</string>
-    <string name="EN_TEXT_HINT">Your SMS text goes here..</string>
+    <string name="EN_TEXT_HINT">Your SMS text goes here..        </string>
     <string name="EN_SEND">SEND</string>
     <string name="EN_USER">Username:</string>
     <string name="EN_PASS">Password:</string>
@@ -12,5 +12,20 @@
     <string name="EN_FROM">From:</string>
     <string name="EN_FROM_HINT">Your nick or cell number</string>
     <string name="EN_URL">URL:</string>
-    <string name="EN_URL_HINT">www.webcalldirect.com</string>
+    <string name="EN_URL_HINT">Default: www.webcalldirect.com (Don't use http://)</string>
+    <string name="SET_PW">Username and Password</string>
+    <string name="SET_USER_KEY">UsernameKey</string>
+    <string name="SET_USER_TITLE">Username</string>
+    <string name="SET_USER_TITLE_DIALOG">Your username please...</string>
+    <string name="SET_PW_KEY">PasswordKey</string>
+    <string name="SET_PW_TITLE">Password</string>
+    <string name="SET_PW_TITLE_DIALOG">Your password please...</string>
+    <string name="SET_PHONE">Phone number</string>
+    <string name="SET_PHONE_KEY">PhoneKey</string>
+    <string name="SET_PHONE_TITLE">Phone number</string>
+    <string name="SET_PHONE_TITLE_DIALOG">Your phone number please...</string>
+    <string name="SET_SERVICE">Service URL</string>
+    <string name="SET_SERVICE_KEY">ServiceKey</string>
+    <string name="SET_SERVICE_TITLE">Service URL</string>
+    <string name="SET_SERVICE_TITLE_DIALOG">Your service URL please...</string>
 </resources>
