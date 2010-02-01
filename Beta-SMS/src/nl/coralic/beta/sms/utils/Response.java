@@ -27,9 +27,7 @@ public class Response
 		// do something
 		if (!data.startsWith("Error:"))
 		{
-			Log.d(Const.TAG_SEND, "data:" + data);
 			data = data.replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "");
-			Log.d(Const.TAG_SEND, "data:" + data);
 			Document doc = getDocument(data);
 
 			if (doc != null)
