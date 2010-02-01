@@ -29,9 +29,9 @@ public class HttpHandler
 	public String send(String URL)
 	{
 		HttpParams httpParameters = new BasicHttpParams();
-		int timeoutConnection = 4000;
+		int timeoutConnection = 10000;
 		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-		int timeoutSocket = 5000;
+		int timeoutSocket = 10000;
 		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 		HttpClient httpclient = new DefaultHttpClient(httpParameters);
 		HttpGet httpget = new HttpGet(URL);
