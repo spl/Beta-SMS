@@ -1,29 +1,31 @@
 package nl.coralic.beta.sms;
 
+import nl.coralic.android.utils.contact.PhoneNumbers;
+import nl.coralic.android.utils.contact.PhonesHandler;
 import nl.coralic.beta.sms.R;
 import nl.coralic.beta.sms.utils.Const;
-import nl.coralic.beta.sms.utils.Contact;
-import nl.coralic.beta.sms.utils.ContactsHandler;
-import nl.coralic.beta.sms.utils.DbHandler;
+import nl.coralic.beta.sms.utils.Response;
 import nl.coralic.beta.sms.utils.SendHandler;
+import nl.coralic.beta.sms.utils.Properties;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.provider.Contacts.People;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class Beta_SMS extends Activity
 {
@@ -31,17 +33,13 @@ public class Beta_SMS extends Activity
 
 	EditText to;
 	EditText text;
-	EditText from;
-	EditText username;
-	EditText password;
-	EditText url;
-	CheckBox saveUsrPass;
-	CheckBox saveFrom;
-	CheckBox saveUrl;
 	Button send;
-	ContactsHandler ch;
+	TextView warningText;	
+	
+	SharedPreferences properties;
+	PhonesHandler ch;
+	PhoneNumbers ph;
 	SendHandler sh;
-	DbHandler db;
 
 	AlertDialog chooseNumberAlert;
 	AlertDialog showStatusAlert;
@@ -58,20 +56,14 @@ public class Beta_SMS extends Activity
 		//
 		to = (EditText) findViewById(R.id.txtTo);
 		text = (EditText) findViewById(R.id.txtText);
-		from = (EditText) findViewById(R.id.txtFrom);
-		username = (EditText) findViewById(R.id.txtUsername);
-		password = (EditText) findViewById(R.id.txtPassword);
-		url = (EditText) findViewById(R.id.txtUrl);
-		saveUsrPass = (CheckBox) findViewById(R.id.chkUsrPass);
-		saveFrom = (CheckBox) findViewById(R.id.chkFrom);
-		saveUrl = (CheckBox) findViewById(R.id.chkUrl);
 		send = (Button) findViewById(R.id.btnSend);
-
-		// open DB
-		db = new DbHandler(this);
+		
+		//send is disabled until we know if all preferences are filled correct
+		send.setEnabled(false);
+		warningText = (TextView) findViewById(R.id.lblTextWarning);
 
 		// check if data exists
-		checkForSavedData();
+		checkForProperties();
 
 		// Set the intent
 		intent = new Intent(Intent.ACTION_PICK, People.CONTENT_URI);
@@ -99,20 +91,19 @@ public class Beta_SMS extends Activity
 	public void onActivityResult(int reqCode, int resultCode, Intent data)
 	{
 		Log.d(Const.TAG_MAIN, "Double taped, show contacts");
-		// super.onActivityResult(reqCode, resultCode, data);
 		if (reqCode == Const.PICK_CONTACT && resultCode == RESULT_OK)
 		{
-			AsyncTask<Uri, Void, Contact> task = new AsyncTask<Uri, Void, Contact>()
+			AsyncTask<Uri, Void, PhoneNumbers> task = new AsyncTask<Uri, Void, PhoneNumbers>()
 			{
 				@Override
-				protected Contact doInBackground(Uri... uris)
+				protected PhoneNumbers doInBackground(Uri... uris)
 				{
-					ch = new ContactsHandler();
-					return ch.getContact(getContentResolver(), uris[0]);
+					ch = new PhonesHandler();
+					return ch.getPhoneNumbersForSelectedContact(getContentResolver(), uris[0]);
 				}
 
 				@Override
-				protected void onPostExecute(Contact result)
+				protected void onPostExecute(PhoneNumbers result)
 				{
 					chooseNumber(result);
 				}
@@ -122,18 +113,19 @@ public class Beta_SMS extends Activity
 		}
 	}
 
-	private void chooseNumber(Contact contact)
+	private void chooseNumber(PhoneNumbers contact)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Pick a number");
+		builder.setTitle("Pick a number?");
 
-		numbers = contact.getMobileNumbersStringArray();
+		this.ph = contact;
 
-		builder.setSingleChoiceItems(numbers, -1, new DialogInterface.OnClickListener()
+		builder.setSingleChoiceItems(ph.getPhoneNumbersLabelArray(), -1, new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int item)
 			{
-				to.setText(numbers[item]);
+				to.setText(ph.getCleanPhoneNumber(item));
+				ph = null;
 				chooseNumberAlert.dismiss();
 			}
 		});
@@ -143,16 +135,15 @@ public class Beta_SMS extends Activity
 
 	public void onSend()
 	{
-		saveIfNeeded();
-		sh = new SendHandler(password.getText().toString(), username.getText().toString(), from.getText().toString(), to.getText().toString(), text
-				.getText().toString(), url.getText().toString());
+		sh = new SendHandler(properties.getString("PasswordKey",""), properties.getString("UsernameKey",""), properties.getString("PhoneKey",""), to.getText().toString(), text
+				.getText().toString(), properties.getString("ServiceKey",""));
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("In progres...");
 		builder.setMessage("Trying to send your SMS.");
 		showStatusAlert = builder.create();
 
-		AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>()
+		AsyncTask<Void, Void, Response> task = new AsyncTask<Void, Void, Response>()
 		{
 			@Override
 			protected void onPreExecute()
@@ -161,17 +152,17 @@ public class Beta_SMS extends Activity
 			}
 
 			@Override
-			protected Boolean doInBackground(Void... v)
+			protected Response doInBackground(Void... v)
 			{
-				return new Boolean(sh.send());
+				return sh.send();
 			}
 
 			@Override
-			protected void onPostExecute(Boolean anwser)
+			protected void onPostExecute(Response anwser)
 			{
-				if (anwser.booleanValue() == true)
+				if (anwser.isSucceful() == true)
 				{
-					showStatusAlert.setMessage("SMS send.");
+					showStatusAlert.setMessage(anwser.getResponse());
 					CountDownTimer cdt = new CountDownTimer(5000, 1000)
 					{
 						@Override
@@ -190,7 +181,7 @@ public class Beta_SMS extends Activity
 				}
 				else
 				{
-					showStatusAlert.setMessage("Faild to send SMS.");
+					showStatusAlert.setMessage(anwser.getError());
 					CountDownTimer cdt = new CountDownTimer(5000, 1000)
 					{
 						@Override
@@ -214,48 +205,50 @@ public class Beta_SMS extends Activity
 
 	}
 
-	private void saveIfNeeded()
+	private void checkForProperties()
 	{
-		db.open();
-		if (saveUsrPass.isChecked())
+		warningText.setText("");
+		properties = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean isEveryPropertieFilled = true;
+		StringBuffer sb = new StringBuffer();
+		send.setEnabled(false);
+		if(!properties.contains("UsernameKey") || properties.getString("UsernameKey", "").equalsIgnoreCase(""))
 		{
-			db.createUpdateUser(username.getText().toString(), password.getText().toString());
+			sb.append("No username. \n");
+			Log.d(Const.TAG_MAIN, "No username");
+			isEveryPropertieFilled = false;
 		}
-		if (saveFrom.isChecked())
+		
+		if(!properties.contains("PasswordKey") || properties.getString("PasswordKey", "").equalsIgnoreCase(""))
 		{
-			db.createUpdateFrom(from.getText().toString());
+			sb.append("No password. \n");
+			Log.d(Const.TAG_MAIN, "No password");
+			isEveryPropertieFilled = false;
 		}
-		if (saveUrl.isChecked())
+		
+		if(!properties.contains("PhoneKey") || properties.getString("PhoneKey", "").equalsIgnoreCase(""))
 		{
-			db.createUpdateUrl(url.getText().toString());
+			sb.append("No phonenumber or username. \n");
+			Log.d(Const.TAG_MAIN, "No phone");
+			isEveryPropertieFilled = false;
 		}
-		db.close();
-	}
-
-	private void checkForSavedData()
-	{
-		db.open();
-		Log.d(Const.TAG_MAIN, "Check if there are saved username + password combo");
-		Cursor c = db.fetchUser();
-		if (c != null && c.getCount() != 0)
+		
+		if(!properties.contains("ServiceKey") || properties.getString("ServiceKey", "").equalsIgnoreCase(""))
 		{
-			username.setText(c.getString(c.getColumnIndex(Const.KEY_USER)));
-			password.setText(c.getString(c.getColumnIndex(Const.KEY_PASS)));
+			sb.append("No service url. \n");
+			Log.d(Const.TAG_MAIN, "No service url");
+			isEveryPropertieFilled = false;
 		}
-		Log.d(Const.TAG_MAIN, "Check if there is a from saved");
-		c = db.fetchFrom();
-		if (c != null && c.getCount() != 0)
+		
+		if(isEveryPropertieFilled)
 		{
-			from.setText(c.getString(c.getColumnIndex(Const.KEY_FROM)));
+			send.setEnabled(true);
 		}
-		Log.d(Const.TAG_MAIN, "Check if there is a url saved");
-		c = db.fetchUrl();
-		if (c != null && c.getCount() != 0)
+		else
 		{
-			url.setText(c.getString(c.getColumnIndex(Const.KEY_URL)));
+			sb.append("Please fill the properties!");
+			warningText.setText(sb.toString());
 		}
-		db.close();
-
 	}
 
 	@Override
@@ -263,6 +256,7 @@ public class Beta_SMS extends Activity
 	{
 		super.onCreateOptionsMenu(menu);
 		menu.add("Info");
+		menu.add("Settings");
 		menu.add("Exit");
 		return true;
 	}
@@ -285,8 +279,21 @@ public class Beta_SMS extends Activity
 				builder.create();
 				builder.show();
 			}
+			if(item.getTitle().toString().equalsIgnoreCase("Settings"))
+			{
+				
+				startActivity(new Intent(this, Properties.class));
+			}
 		}
 		return true;
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Log.d(Const.TAG_MAIN, "onResume enterd");
+		checkForProperties();
 	}
 
 }
