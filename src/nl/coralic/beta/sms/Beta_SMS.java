@@ -5,6 +5,7 @@ import nl.coralic.android.utils.contact.PhonesHandler;
 import nl.coralic.beta.sms.R;
 import nl.coralic.beta.sms.utils.Const;
 import nl.coralic.beta.sms.utils.Response;
+import nl.coralic.beta.sms.utils.SMSHelper;
 import nl.coralic.beta.sms.utils.SendHandler;
 import nl.coralic.beta.sms.utils.Properties;
 
@@ -34,8 +35,8 @@ public class Beta_SMS extends Activity
 	EditText to;
 	EditText text;
 	Button send;
-	TextView warningText;	
-	
+	TextView warningText;
+
 	SharedPreferences properties;
 	PhonesHandler ch;
 	PhoneNumbers ph;
@@ -57,8 +58,8 @@ public class Beta_SMS extends Activity
 		to = (EditText) findViewById(R.id.txtTo);
 		text = (EditText) findViewById(R.id.txtText);
 		send = (Button) findViewById(R.id.btnSend);
-		
-		//send is disabled until we know if all preferences are filled correct
+
+		// send is disabled until we know if all preferences are filled correct
 		send.setEnabled(false);
 		warningText = (TextView) findViewById(R.id.lblTextWarning);
 
@@ -69,16 +70,14 @@ public class Beta_SMS extends Activity
 		intent = new Intent(Intent.ACTION_PICK, People.CONTENT_URI);
 
 		// When double tapd show Contacts
-		to.setOnClickListener(new View.OnClickListener()
-		{
+		to.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v)
 			{
 				startActivityForResult(intent, Const.PICK_CONTACT);
 			}
 		});
 
-		send.setOnClickListener(new View.OnClickListener()
-		{
+		send.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v)
 			{
 				onSend();
@@ -93,8 +92,7 @@ public class Beta_SMS extends Activity
 		Log.d(Const.TAG_MAIN, "Double taped, show contacts");
 		if (reqCode == Const.PICK_CONTACT && resultCode == RESULT_OK)
 		{
-			AsyncTask<Uri, Void, PhoneNumbers> task = new AsyncTask<Uri, Void, PhoneNumbers>()
-			{
+			AsyncTask<Uri, Void, PhoneNumbers> task = new AsyncTask<Uri, Void, PhoneNumbers>() {
 				@Override
 				protected PhoneNumbers doInBackground(Uri... uris)
 				{
@@ -120,8 +118,7 @@ public class Beta_SMS extends Activity
 
 		this.ph = contact;
 
-		builder.setSingleChoiceItems(ph.getPhoneNumbersLabelArray(), -1, new DialogInterface.OnClickListener()
-		{
+		builder.setSingleChoiceItems(ph.getPhoneNumbersLabelArray(), -1, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item)
 			{
 				to.setText(ph.getCleanPhoneNumber(item));
@@ -135,16 +132,15 @@ public class Beta_SMS extends Activity
 
 	public void onSend()
 	{
-		sh = new SendHandler(properties.getString("PasswordKey",""), properties.getString("UsernameKey",""), properties.getString("PhoneKey",""), to.getText().toString(), text
-				.getText().toString(), properties.getString("ServiceKey",""));
+		sh = new SendHandler(properties.getString("PasswordKey", ""), properties.getString("UsernameKey", ""), properties.getString("PhoneKey", ""),
+				to.getText().toString(), text.getText().toString(), properties.getString("ServiceKey", ""));
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("In progres...");
 		builder.setMessage("Trying to send your SMS.");
 		showStatusAlert = builder.create();
 
-		AsyncTask<Void, Void, Response> task = new AsyncTask<Void, Void, Response>()
-		{
+		AsyncTask<Void, Void, Response> task = new AsyncTask<Void, Void, Response>() {
 			@Override
 			protected void onPreExecute()
 			{
@@ -163,11 +159,15 @@ public class Beta_SMS extends Activity
 				if (anwser.isSucceful() == true)
 				{
 					showStatusAlert.setMessage(anwser.getResponse());
-					CountDownTimer cdt = new CountDownTimer(5000, 1000)
-					{
+					CountDownTimer cdt = new CountDownTimer(5000, 1000) {
 						@Override
 						public void onFinish()
 						{
+							SMSHelper sms = new SMSHelper();
+							if (properties.getBoolean("SaveSMSKey", false))
+							{
+								sms.addSMS(getContentResolver(), text.getText().toString(), to.getText().toString());
+							}
 							showStatusAlert.dismiss();
 						}
 
@@ -182,8 +182,7 @@ public class Beta_SMS extends Activity
 				else
 				{
 					showStatusAlert.setMessage(anwser.getError());
-					CountDownTimer cdt = new CountDownTimer(5000, 1000)
-					{
+					CountDownTimer cdt = new CountDownTimer(5000, 1000) {
 						@Override
 						public void onFinish()
 						{
@@ -212,35 +211,35 @@ public class Beta_SMS extends Activity
 		boolean isEveryPropertieFilled = true;
 		StringBuffer sb = new StringBuffer();
 		send.setEnabled(false);
-		if(!properties.contains("UsernameKey") || properties.getString("UsernameKey", "").equalsIgnoreCase(""))
+		if (!properties.contains("UsernameKey") || properties.getString("UsernameKey", "").equalsIgnoreCase(""))
 		{
 			sb.append("No username. \n");
 			Log.d(Const.TAG_MAIN, "No username");
 			isEveryPropertieFilled = false;
 		}
-		
-		if(!properties.contains("PasswordKey") || properties.getString("PasswordKey", "").equalsIgnoreCase(""))
+
+		if (!properties.contains("PasswordKey") || properties.getString("PasswordKey", "").equalsIgnoreCase(""))
 		{
 			sb.append("No password. \n");
 			Log.d(Const.TAG_MAIN, "No password");
 			isEveryPropertieFilled = false;
 		}
-		
-		if(!properties.contains("PhoneKey") || properties.getString("PhoneKey", "").equalsIgnoreCase(""))
+
+		if (!properties.contains("PhoneKey") || properties.getString("PhoneKey", "").equalsIgnoreCase(""))
 		{
 			sb.append("No phonenumber or username. \n");
 			Log.d(Const.TAG_MAIN, "No phone");
 			isEveryPropertieFilled = false;
 		}
-		
-		if(!properties.contains("ServiceKey") || properties.getString("ServiceKey", "").equalsIgnoreCase(""))
+
+		if (!properties.contains("ServiceKey") || properties.getString("ServiceKey", "").equalsIgnoreCase(""))
 		{
 			sb.append("No service url. \n");
 			Log.d(Const.TAG_MAIN, "No service url");
 			isEveryPropertieFilled = false;
 		}
-		
-		if(isEveryPropertieFilled)
+
+		if (isEveryPropertieFilled)
 		{
 			send.setEnabled(true);
 		}
@@ -279,15 +278,15 @@ public class Beta_SMS extends Activity
 				builder.create();
 				builder.show();
 			}
-			if(item.getTitle().toString().equalsIgnoreCase("Settings"))
+			if (item.getTitle().toString().equalsIgnoreCase("Settings"))
 			{
-				
+
 				startActivity(new Intent(this, Properties.class));
 			}
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onResume()
 	{
