@@ -28,4 +28,8 @@
     <string name="SET_SERVICE_KEY">ServiceKey</string>
     <string name="SET_SERVICE_TITLE">Service URL</string>
     <string name="SET_SERVICE_TITLE_DIALOG">Your service URL please...</string>
+    <string name="SET_SAVE_SMS_KEY">SaveSMSKey</string>
+    <string name="SET_SAVE_SMS">SMS preferences</string>
+    <string name="SET_SAVE_SMS_TITLE">Save SMS</string>
+    <string name="SET_SAVE_SMS_TITLE_DIALOG">Add the send SMS to you Inbox.</string>
 </resources>

@@ -1,3 +1,9 @@
+VERSION 1.3
+Save SMS to "Messages Inbox", this allows you to follow the conversation in the "Messages". 
+
+VERSION 1.2
+Time out fix
+
 VERSION 1.1
 Better error handling for SMS sending
 Using properties instead of database for efficiency
