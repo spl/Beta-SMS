@@ -62,7 +62,7 @@ public class Beta_SMS extends Activity
 		// send is disabled until we know if all preferences are filled correct
 		send.setEnabled(false);
 		warningText = (TextView) findViewById(R.id.lblTextWarning);
-
+		
 		// check if data exists
 		checkForProperties();
 
@@ -114,7 +114,7 @@ public class Beta_SMS extends Activity
 	private void chooseNumber(PhoneNumbers contact)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Pick a number?");
+		builder.setTitle(getString(R.string.ALERT_CHOOSE_NUM_TITLE));
 
 		this.ph = contact;
 
@@ -136,8 +136,8 @@ public class Beta_SMS extends Activity
 				to.getText().toString(), text.getText().toString(), properties.getString("ServiceKey", ""));
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("In progres...");
-		builder.setMessage("Trying to send your SMS.");
+		builder.setTitle(getString(R.string.ALERT_SEND_TITLE));
+		builder.setMessage(getString(R.string.ALERT_SEND_MSG));
 		showStatusAlert = builder.create();
 
 		AsyncTask<Void, Void, Response> task = new AsyncTask<Void, Void, Response>() {
@@ -150,7 +150,7 @@ public class Beta_SMS extends Activity
 			@Override
 			protected Response doInBackground(Void... v)
 			{
-				return sh.send();
+				return sh.send(getApplicationContext());
 			}
 
 			@Override
@@ -174,7 +174,7 @@ public class Beta_SMS extends Activity
 						@Override
 						public void onTick(long millisUntilFinished)
 						{
-							showStatusAlert.setTitle("Closing in: " + millisUntilFinished / 1000);
+							showStatusAlert.setTitle(getString(R.string.ALERT_COUNT) + " " + millisUntilFinished / 1000);
 						}
 					};
 					cdt.start();
@@ -192,7 +192,7 @@ public class Beta_SMS extends Activity
 						@Override
 						public void onTick(long millisUntilFinished)
 						{
-							showStatusAlert.setTitle("Closing in: " + millisUntilFinished / 1000);
+							showStatusAlert.setTitle(getString(R.string.ALERT_COUNT) + " " + millisUntilFinished / 1000);
 						}
 					};
 					cdt.start();
@@ -213,28 +213,28 @@ public class Beta_SMS extends Activity
 		send.setEnabled(false);
 		if (!properties.contains("UsernameKey") || properties.getString("UsernameKey", "").equalsIgnoreCase(""))
 		{
-			sb.append("No username. \n");
+			sb.append(getString(R.string.NO_USER));
 			Log.d(Const.TAG_MAIN, "No username");
 			isEveryPropertieFilled = false;
 		}
 
 		if (!properties.contains("PasswordKey") || properties.getString("PasswordKey", "").equalsIgnoreCase(""))
 		{
-			sb.append("No password. \n");
+			sb.append(getString(R.string.NO_PASS));
 			Log.d(Const.TAG_MAIN, "No password");
 			isEveryPropertieFilled = false;
 		}
 
 		if (!properties.contains("PhoneKey") || properties.getString("PhoneKey", "").equalsIgnoreCase(""))
 		{
-			sb.append("No phonenumber or username. \n");
+			sb.append(getString(R.string.NO_NUMBER));
 			Log.d(Const.TAG_MAIN, "No phone");
 			isEveryPropertieFilled = false;
 		}
 
 		if (!properties.contains("ServiceKey") || properties.getString("ServiceKey", "").equalsIgnoreCase(""))
 		{
-			sb.append("No service url. \n");
+			sb.append(getString(R.string.NO_URL));
 			Log.d(Const.TAG_MAIN, "No service url");
 			isEveryPropertieFilled = false;
 		}
@@ -245,7 +245,7 @@ public class Beta_SMS extends Activity
 		}
 		else
 		{
-			sb.append("Please fill the properties!");
+			sb.append(getString(R.string.NO_INFO));
 			warningText.setText(sb.toString());
 		}
 	}
@@ -254,9 +254,9 @@ public class Beta_SMS extends Activity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		super.onCreateOptionsMenu(menu);
-		menu.add("Info");
-		menu.add("Settings");
-		menu.add("Exit");
+		menu.add(getString(R.string.MENU_INFO));
+		menu.add(getString(R.string.MENU_SET));
+		menu.add(getString(R.string.MENU_EXIT));
 		return true;
 	}
 
@@ -265,20 +265,20 @@ public class Beta_SMS extends Activity
 
 		if (item.hasSubMenu() == false)
 		{
-			if (item.getTitle().toString().equalsIgnoreCase("Exit"))
+			if (item.getTitle().toString().equalsIgnoreCase(getString(R.string.MENU_EXIT)))
 			{
 				this.finish();
 			}
-			if (item.getTitle().toString().equalsIgnoreCase("Info"))
+			if (item.getTitle().toString().equalsIgnoreCase(getString(R.string.MENU_INFO)))
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Info");
-				builder.setMessage("This application is made by Armin Čoralić. Visit me at http://blog.coralic.nl");
-				builder.setPositiveButton("Close", null);
+				builder.setTitle(getString(R.string.MENU_INFO));
+				builder.setMessage(getString(R.string.INFO));
+				builder.setPositiveButton(getString(R.string.INFO_EXIT), null);
 				builder.create();
 				builder.show();
 			}
-			if (item.getTitle().toString().equalsIgnoreCase("Settings"))
+			if (item.getTitle().toString().equalsIgnoreCase(getString(R.string.MENU_SET)))
 			{
 
 				startActivity(new Intent(this, Properties.class));

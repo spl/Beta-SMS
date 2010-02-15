@@ -1,5 +1,7 @@
-- Allow debug information to be send to google cloud, for better problem solving
 - Allow people to send suggestions, (send it to google cloud)
-- Multi language?
+- Allow other encoding when sending
+- Allow debug information to be send to google cloud, for better problem solving
 - Send to multiple contacts at the same time
 - Allow SMS typing in "messages" but trigger Beta-SMS to send over the internet
+- Show saldo inside the application
+- Widget show saldo
