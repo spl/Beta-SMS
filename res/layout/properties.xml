@@ -10,12 +10,12 @@
 	<PreferenceCategory android:title="@string/SET_PHONE">
 		<EditTextPreference android:key="@string/SET_PHONE_KEY"
 			android:title="@string/SET_PHONE_TITLE" android:dialogTitle="@string/SET_PHONE_TITLE_DIALOG"
-			android:summary="@string/EN_FROM_HINT" />
+			android:summary="@string/SET_PHONE_TITLE_HINT" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/SET_SERVICE">
 		<EditTextPreference android:key="@string/SET_SERVICE_KEY"
 			android:title="@string/SET_SERVICE_TITLE" android:dialogTitle="@string/SET_SERVICE_TITLE_DIALOG"
-			android:summary="@string/EN_URL_HINT" android:defaultValue="www.webcalldirect.com" />
+			android:summary="@string/SET_SERVICE_TITLE_HINT" android:defaultValue="www.webcalldirect.com" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/SET_SAVE_SMS">
 		<CheckBoxPreference android:key="@string/SET_SAVE_SMS_KEY"
