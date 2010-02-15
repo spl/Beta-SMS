@@ -8,9 +8,12 @@ import java.io.StringBufferInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import nl.coralic.beta.sms.R;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import android.content.Context;
 import android.util.Log;
 
 /**
@@ -21,9 +24,11 @@ public class Response
 	private String response = "";
 	private String error = "";
 	private boolean succeful = false;
+	private Context context;
 
-	public Response(String data)
+	public Response(String data, Context con)
 	{
+		context = con;
 		// do something
 		if (!data.startsWith("Error:"))
 		{
@@ -37,7 +42,7 @@ public class Response
 
 				if (root.getElementsByTagName("resultstring").item(0).getFirstChild().getNodeValue().equalsIgnoreCase("success"))
 				{
-					setResponse("Sms send.");
+					setResponse(context.getString(R.string.SMS_SEND_SUCCESS));
 					setSucceful(true);
 				}
 				else
@@ -46,7 +51,7 @@ public class Response
 
 					if (tmpCause.equalsIgnoreCase(""))
 					{
-						setError("Uknown cause, faild.");
+						setError(context.getString(R.string.SMS_SEND_FAILED));
 					}
 					else
 					{
@@ -58,7 +63,7 @@ public class Response
 			else
 			{
 				Log.d(Const.TAG_SEND, "Error doc is null");
-				setError("Error: Parsing response");
+				setError(context.getString(R.string.SMS_FAILED_PARS_RESPONSE));
 				setSucceful(false);
 			}
 		}
@@ -113,7 +118,7 @@ public class Response
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			setError("Error: Parsing response");
+			setError(context.getString(R.string.SMS_FAILED_PARS_RESPONSE));
 			setSucceful(false);
 		}
 		return ret;

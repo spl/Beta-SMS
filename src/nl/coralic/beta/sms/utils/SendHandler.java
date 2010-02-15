@@ -5,6 +5,8 @@ package nl.coralic.beta.sms.utils;
 
 import java.net.URLEncoder;
 
+import android.content.Context;
+
 import nl.coralic.android.utils.http.HttpHandler;
 
 /**
@@ -37,14 +39,14 @@ public class SendHandler
 
 	}
 
-	public Response send()
+	public Response send(Context context)
 	{
 		
 		String uri = "https://" + url + "/myaccount/sendsms.php?username=" + username + "&password=" + password + "&to=" + to + "&text=" + text
 				+ "&from=" + from;
 		HttpHandler hh = new HttpHandler();
 
-		return new Response(hh.send(uri));
+		return new Response(hh.send(uri), context);
 	}
 
 }
