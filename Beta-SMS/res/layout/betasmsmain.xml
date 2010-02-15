@@ -5,17 +5,17 @@
 	<TableLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 		<TableRow>
-			<TextView android:id="@+id/lblTo" android:text="@string/EN_TO" />
+			<TextView android:id="@+id/lblTo" android:text="@string/MAIN_TO" />
 			<EditText android:id="@+id/txtTo" android:inputType="phone"
-				android:hint="@string/EN_TO_HINT" />
+				android:hint="@string/MAIN_TO_HINT" />
 		</TableRow>
 		<TableRow>
-			<TextView android:id="@+id/lblText" android:text="@string/EN_TEXT" />
-			<EditText android:id="@+id/txtText" android:hint="@string/EN_TEXT_HINT"
+			<TextView android:id="@+id/lblText" android:text="@string/MAIN_SMSTEXT" />
+			<EditText android:id="@+id/txtText" android:hint="@string/MAIN_SMSTEXT_HINT"
 				android:maxLength="160" android:minLines="5"/>
 		</TableRow>
 		<TableRow>
-			<Button android:id="@+id/btnSend" android:text="@string/EN_SEND"/>
+			<Button android:id="@+id/btnSend" android:text="@string/BUTTON_SEND"/>
 		</TableRow>
 		<TableRow>
 		<TextView android:id="@+id/empty"/>
