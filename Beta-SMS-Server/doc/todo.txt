@@ -1,0 +1,7 @@
+- Delete feature requests
+- Login to see the requests
+- Mail when new request comes in
+- Allow debug data to be send
+- Show debug data
+- Delete debug data
+- Mail when new debug data comes in
