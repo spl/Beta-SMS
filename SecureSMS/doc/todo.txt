@@ -1,6 +1,0 @@
-- Clean the code
-- Same as for Beta-SMS: Create a more generic ContactsHandler so that it's possible to use all data from Contacts class
-- Use a more effective encryption
-- Investigate option for using PGP
-- Create a nicer GUI
-- Show encrypted SMS only

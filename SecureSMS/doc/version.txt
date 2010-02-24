@@ -1,6 +1,0 @@
-VERSION 1.0
-- Can send encrypted SMS 
-- Can select contact
-- Can retrieve PINCODE from selected contact that is saved in the format 0000PINCODE (example 0000542342)
-- Can read encrypted SMS
-- Because of the used encryption you can only write 70 chars
