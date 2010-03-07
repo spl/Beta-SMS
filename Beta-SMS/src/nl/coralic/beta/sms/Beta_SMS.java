@@ -1,13 +1,13 @@
 package nl.coralic.beta.sms;
 
-import nl.coralic.android.utils.contact.PhoneNumbers;
-import nl.coralic.android.utils.contact.PhonesHandler;
+import nl.coralic.beta.sms.utils.contact.PhoneNumbers;
+import nl.coralic.beta.sms.utils.contact.PhonesHandler;
 import nl.coralic.beta.sms.R;
-import nl.coralic.beta.sms.utils.Const;
 import nl.coralic.beta.sms.utils.Response;
 import nl.coralic.beta.sms.utils.SMSHelper;
 import nl.coralic.beta.sms.utils.SendHandler;
 import nl.coralic.beta.sms.utils.Properties;
+import nl.coralic.beta.sms.utils.constants.Const;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -256,6 +256,7 @@ public class Beta_SMS extends Activity
 		super.onCreateOptionsMenu(menu);
 		menu.add(getString(R.string.MENU_INFO));
 		menu.add(getString(R.string.MENU_SET));
+		menu.add(getString(R.string.MENU_FEATURE));
 		menu.add(getString(R.string.MENU_EXIT));
 		return true;
 	}
@@ -282,6 +283,10 @@ public class Beta_SMS extends Activity
 			{
 
 				startActivity(new Intent(this, Properties.class));
+			}
+			if(item.getTitle().toString().equalsIgnoreCase(getString(R.string.MENU_FEATURE)))
+			{
+				
 			}
 		}
 		return true;

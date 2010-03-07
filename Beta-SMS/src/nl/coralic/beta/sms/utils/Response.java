@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import nl.coralic.beta.sms.R;
+import nl.coralic.beta.sms.utils.constants.Const;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
