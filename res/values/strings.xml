@@ -64,6 +64,10 @@
     <string name="ERR_PROT">Error: Protocol problems</string>
     <string name="ERR_IO">Error: IO problems</string>
     
+    <string name="FEATURE_TITLE">Feature request</string>
+    <string name="FEATURE_MSG">You can send your feature request this way.</string>
+    <string name="FEATURE_SEND">Send</string>
+        
     <!-- Keys -->
     <string name="SET_USER_KEY">UsernameKey</string>
     <string name="SET_PW_KEY">PasswordKey</string>

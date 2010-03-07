@@ -25,13 +25,18 @@ public class Response
 	private String response = "";
 	private String error = "";
 	private boolean succeful = false;
-	private Context context;
+	protected Context context;
 
+	public Response()
+	{
+		
+	}
+	
 	public Response(String data, Context con)
 	{
 		context = con;
 		// do something
-		if (!data.startsWith("Error:"))
+		if (!data.startsWith("Error:") && !data.startsWith("Fout:")) 
 		{
 			data = data.replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "");
 			Document doc = getDocument(data);
@@ -91,7 +96,7 @@ public class Response
 		return error;
 	}
 
-	private void setError(String error)
+	protected void setError(String error)
 	{
 		this.error = error;
 	}
@@ -101,7 +106,7 @@ public class Response
 		return succeful;
 	}
 
-	private void setSucceful(boolean succeful)
+	protected void setSucceful(boolean succeful)
 	{
 		this.succeful = succeful;
 	}

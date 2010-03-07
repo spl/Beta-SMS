@@ -1,7 +1,11 @@
 - Allow people to send suggestions, (send it to google cloud)
+- Information (more info about how the app works and an link to my blog=link)
+- Write documentation for source code
 - Allow other encoding when sending
 - Allow debug information to be send to google cloud, for better problem solving
 - Send to multiple contacts at the same time
 - Allow SMS typing in "messages" but trigger Beta-SMS to send over the internet
 - Show saldo inside the application
 - Widget show saldo
+- Redesign internal code structure
+- Redesign GUI

@@ -22,6 +22,11 @@ public class SendHandler
 	private String text = "";
 	private String url = "www.webcalldirect.com";
 
+	public SendHandler()
+	{
+		
+	}	
+	
 	/**
 	 * 
 	 */
@@ -47,6 +52,13 @@ public class SendHandler
 		HttpHandler hh = new HttpHandler();
 
 		return new Response(hh.send(uri, context), context);
+	}
+	
+	public FeatureRequestResponse sendFeatureRequest(Context context, String data)
+	{
+		String uri = "http://betasmsserver.appspot.com/addfeaturerequest?HASH=99dae5fed1878dea1ee46a1bb0f8f149&DATA="+URLEncoder.encode(data);
+		HttpHandler hh = new HttpHandler();
+		return new FeatureRequestResponse(hh.send(uri, context), context);
 	}
 
 }
