@@ -7,7 +7,7 @@ import java.net.URLEncoder;
 
 import android.content.Context;
 
-import nl.coralic.android.utils.http.HttpHandler;
+import nl.coralic.beta.sms.utils.http.HttpHandler;
 
 /**
  * @author "Armin Čoralić"
@@ -46,7 +46,7 @@ public class SendHandler
 				+ "&from=" + from;
 		HttpHandler hh = new HttpHandler();
 
-		return new Response(hh.send(uri), context);
+		return new Response(hh.send(uri, context), context);
 	}
 
 }

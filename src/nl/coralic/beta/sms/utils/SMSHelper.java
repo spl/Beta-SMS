@@ -3,6 +3,7 @@
  */
 package nl.coralic.beta.sms.utils;
 
+import nl.coralic.beta.sms.utils.constants.Const;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;

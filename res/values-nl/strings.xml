@@ -57,4 +57,10 @@
     
     <string name="INFO_EXIT">Sluit</string>
     <string name="INFO">Deze applicatie is gemaakt door Armin Čoralić. Bezoek mijn website op http://blog.coralic.nl</string>
+    
+    <string name="ERR_CODE">Fout: code </string>
+    <string name="ERR_TIMEOUT">Fout: Timeout</string>
+    <string name="ERR_PROT">Fout: Protocol problemen</string>
+    <string name="ERR_IO">Fout: IO problemen</string>
+
 </resources>
