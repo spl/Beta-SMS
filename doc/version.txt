@@ -1,5 +1,6 @@
 VERSION 1.4
 Added Dutch language support.
+You can request features.
 
 VERSION 1.3
 Save SMS to "Messages Inbox", this allows you to follow the conversation in the "Messages". 

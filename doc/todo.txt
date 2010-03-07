@@ -1,4 +1,3 @@
-- Allow people to send suggestions, (send it to google cloud)
 - Information (more info about how the app works and an link to my blog=link)
 - Write documentation for source code
 - Allow other encoding when sending
