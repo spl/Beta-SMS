@@ -19,6 +19,9 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import com.coralic.utils.R;
+
+import android.content.Context;
 import android.util.Log;
 
 /**
@@ -26,7 +29,7 @@ import android.util.Log;
  */
 public class HttpHandler
 {
-	public String send(String URL)
+	public String send(String URL, Context context)
 	{
 		HttpParams httpParameters = new BasicHttpParams();
 		int timeoutConnection = 28000;
@@ -49,22 +52,22 @@ public class HttpHandler
 			}
 			else
 			{
-				responseBody = "Error: code "+ response.getStatusLine().getStatusCode();
+				responseBody = context.getString(R.string.ERR_CODE)+ response.getStatusLine().getStatusCode();
 			}
 		}
 		catch (SocketTimeoutException se)
 		{
-			responseBody = "Error: Timeout";
+			responseBody = context.getString(R.string.ERR_TIMEOUT);
 			se.printStackTrace();
 		}
 		catch (ClientProtocolException e)
 		{
-			responseBody = "Error: Protocol problems";
+			responseBody = context.getString(R.string.ERR_PROT);
 			e.printStackTrace();
 		}
 		catch (IOException e)
 		{
-			responseBody = "Error: IO problems";
+			responseBody = context.getString(R.string.ERR_IO);
 			e.printStackTrace();
 		}
 		
