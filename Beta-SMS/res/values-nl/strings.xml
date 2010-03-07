@@ -62,5 +62,9 @@
     <string name="ERR_TIMEOUT">Fout: Timeout</string>
     <string name="ERR_PROT">Fout: Protocol problemen</string>
     <string name="ERR_IO">Fout: IO problemen</string>
+    
+   <string name="FEATURE_TITLE">Aanvraag voor verbeteringen</string>
+    <string name="FEATURE_MSG">U kunt uw aanvraag voor verbeteringen op deze manier verzenden.</string>
+    <string name="FEATURE_SEND">Verstuur</string>
 
 </resources>

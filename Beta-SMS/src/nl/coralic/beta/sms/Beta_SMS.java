@@ -3,6 +3,7 @@ package nl.coralic.beta.sms;
 import nl.coralic.beta.sms.utils.contact.PhoneNumbers;
 import nl.coralic.beta.sms.utils.contact.PhonesHandler;
 import nl.coralic.beta.sms.R;
+import nl.coralic.beta.sms.utils.FeatureRequestResponse;
 import nl.coralic.beta.sms.utils.Response;
 import nl.coralic.beta.sms.utils.SMSHelper;
 import nl.coralic.beta.sms.utils.SendHandler;
@@ -44,7 +45,9 @@ public class Beta_SMS extends Activity
 
 	AlertDialog chooseNumberAlert;
 	AlertDialog showStatusAlert;
+	AlertDialog showFeatureRequestAlert;
 	String[] numbers;
+	EditText input;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -286,11 +289,87 @@ public class Beta_SMS extends Activity
 			}
 			if(item.getTitle().toString().equalsIgnoreCase(getString(R.string.MENU_FEATURE)))
 			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(getString(R.string.FEATURE_TITLE));
+				builder.setMessage(getString(R.string.FEATURE_MSG));
 				
+				input = new EditText(this);  
+				builder.setView(input);  
+								
+				builder.setPositiveButton(getString(R.string.FEATURE_SEND), new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int button)
+					{
+						//send
+						sendFeatureRequest();
+					}
+				});						
+						
+				showFeatureRequestAlert = builder.create();
+				builder.show();
 			}
 		}
 		return true;
 	}
+	
+	public void sendFeatureRequest()
+	{
+		sh = new SendHandler();
+
+		AsyncTask<Void, Void, FeatureRequestResponse> task = new AsyncTask<Void, Void, FeatureRequestResponse>() {
+			@Override
+			protected FeatureRequestResponse doInBackground(Void... v)
+			{
+				return sh.sendFeatureRequest(getApplicationContext(), input.getText().toString());
+			}
+
+			@Override
+			protected void onPostExecute(FeatureRequestResponse anwser)
+			{
+				if (anwser.isSucceful() == true)
+				{
+					showFeatureRequestAlert.setMessage(anwser.getResponse());
+					input.setEnabled(false);
+					CountDownTimer cdt = new CountDownTimer(5000, 1000) {
+						@Override
+						public void onFinish()
+						{
+							showFeatureRequestAlert.dismiss();
+						}
+
+						@Override
+						public void onTick(long millisUntilFinished)
+						{
+							showFeatureRequestAlert.setTitle(getString(R.string.ALERT_COUNT) + " " + millisUntilFinished / 1000);
+						}
+					};
+					cdt.start();
+				}
+				else
+				{
+					showFeatureRequestAlert.setMessage(anwser.getError());
+					CountDownTimer cdt = new CountDownTimer(5000, 1000) {
+						@Override
+						public void onFinish()
+						{
+							showFeatureRequestAlert.dismiss();
+						}
+
+						@Override
+						public void onTick(long millisUntilFinished)
+						{
+							showFeatureRequestAlert.setTitle(getString(R.string.ALERT_COUNT) + " " + millisUntilFinished / 1000);
+						}
+					};
+					cdt.start();
+				}
+			}
+		};
+
+		task.execute();
+
+	}
+	
 
 	@Override
 	public void onResume()
