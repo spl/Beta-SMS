@@ -1,10 +1,22 @@
-- Information (more info about how the app works and an link to my blog=link)
-- Write documentation for source code
-- Allow other encoding when sending
+- request features (mail en text)
+	- feature submit
+	- je krijgt mail met link naar beta-sms.coralic.nl/todo.php?id=0214628146
+	- beta-sms site moet de features kunnen tonen en je moet een comment aan kunnen toevoegen (alles gaat onder water via google)
+	- mini admin paneel voor dit waar ik status kan aanpassen
+		- Fixed/Won't fix/Duplicate(link naar dat duplicate)/Unknown
+
+
+
 - Allow debug information to be send to google cloud, for better problem solving
-- Send to multiple contacts at the same time
-- Allow SMS typing in "messages" but trigger Beta-SMS to send over the internet
-- Show saldo inside the application
-- Widget show saldo
-- Redesign internal code structure
-- Redesign GUI
+
+- maak het mogelijk om herzenden toe te staan
+- wat gebeurt er als er meerdere berichten zijn en eerste gaat goed en de tweede fout?
+- naar meerdere mensen verzenden?
+- engels, nederlands, spaans en bosnischs ondersteunen
+
+
+----- TEST ------
+	- send 1 sms
+	- send 2 sms
+	- test gui auto
+	- Debug/traceview

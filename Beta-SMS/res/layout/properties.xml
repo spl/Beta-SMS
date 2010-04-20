@@ -20,5 +20,7 @@
 	<PreferenceCategory android:title="@string/SET_SAVE_SMS">
 		<CheckBoxPreference android:key="@string/SET_SAVE_SMS_KEY"
 			android:title="@string/SET_SAVE_SMS_TITLE" android:summary="@string/SET_SAVE_SMS_TITLE_DIALOG" />
+					<CheckBoxPreference android:key="@string/SET_DELETE_TEXT_KEY"
+			android:title="@string/SET_DELETE_TEXT_TITLE" android:summary="@string/SET_DELETE_TEXT_TITLE_DIALOG" />
 	</PreferenceCategory>
 </PreferenceScreen>

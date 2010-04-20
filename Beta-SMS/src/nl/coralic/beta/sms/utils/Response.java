@@ -61,6 +61,7 @@ public class Response
 					}
 					else
 					{
+						//TODO: translate the error messages to other languages
 						setError(tmpCause);
 					}
 					setSucceful(false);

@@ -10,11 +10,15 @@ import android.net.Uri;
 
 /**
  * @author "Armin Čoralić"
- *
  */
 public class SMSHelper
 { 
-	
+	/**
+	 * Adds SMS to the phones SMS database
+	 * @param cr
+	 * @param body
+	 * @param phonenumber
+	 */
 	public void addSMS(ContentResolver cr, String body, String phonenumber)
 	{
 	 ContentValues values = new ContentValues();
@@ -24,7 +28,7 @@ public class SMSHelper
      values.put(Const.STATUS, -1);
      values.put(Const.TYPE, 2);
      values.put(Const.BODY, body);
-     Uri inserted = cr.insert(Uri.parse("content://sms"), values);
+     cr.insert(Uri.parse("content://sms"), values);
 	}
     
 	private String getDate()

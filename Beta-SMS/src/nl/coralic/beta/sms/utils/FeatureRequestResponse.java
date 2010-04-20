@@ -1,6 +1,8 @@
 package nl.coralic.beta.sms.utils;
 import android.content.Context;
-
+/**
+ * @author "Armin Čoralić"
+ */
 public class FeatureRequestResponse extends Response
 {
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class PhoneNumbers
 {
 	private ArrayList<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
-
+	private String contactsName;
 	
 	/**
 	 * @return the mobileNumber
@@ -58,4 +58,13 @@ public class PhoneNumbers
 	{
 		return this.phoneNumbers.size();
 	}
+
+	public String getContactsName() {
+		return contactsName;
+	}
+
+	public void setContactsName(String contactsName) {
+		this.contactsName = contactsName;
+	}
+	
 }
