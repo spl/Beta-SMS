@@ -1,4 +1,4 @@
-package nl.coralic.beta.sms;
+package nl.coralic.beta.sms.db;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
