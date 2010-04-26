@@ -3,6 +3,7 @@ package nl.coralic.beta.sms;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
@@ -14,6 +15,8 @@ import nl.coralic.beta.sms.utils.Utils;
 @SuppressWarnings("serial")
 public class ShowAllServlet extends HttpServlet
 {
+	private static final Logger log = Logger.getLogger(ShowAllServlet.class.getName());
+	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
 		doGet(req, resp);

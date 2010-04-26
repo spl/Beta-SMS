@@ -3,9 +3,12 @@ package nl.coralic.beta.sms;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
+
+import com.google.appengine.api.datastore.Text;
 
 import nl.coralic.beta.sms.dataobject.Features;
 import nl.coralic.beta.sms.db.PMF;
@@ -27,7 +30,7 @@ public class AddFeatureRequestServlet extends HttpServlet
 		 */
 
 		resp.setContentType("text/plain");
-
+		System.out.println("Add issue");
 		// Get param's and check if they are valid
 		String HASH = req.getParameter("HASH");
 		String DATA = req.getParameter("DATA");
@@ -42,20 +45,24 @@ public class AddFeatureRequestServlet extends HttpServlet
 		// Save data to db
 		Date date = new Date();
 		ArrayList<String> tmp = new ArrayList<String>();
-		Features fd = new Features(DATA, date, tmp, "Unknown", DEBUG, MAIL);
+		System.out.println("Create object");
+		Features fd = new Features(DATA, date, tmp, "Unknown", new Text(DEBUG), MAIL);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try
 		{
+			System.out.println("Persist object");
 			fd = pm.makePersistent(fd);
 			Utils utils = new Utils();
 			if (fd.getEmail() != null && !fd.getEmail().equalsIgnoreCase(""))
 			{
+				System.out.println("Try to send mail");
 				utils.sendMail(String.valueOf(fd.getKey().getId()), fd.getEmail());
 			}
 		}
 		finally
 		{
+			System.out.println("Close pm");
 			pm.close();
 		}
 		resp.getWriter().println(fd.getKey().getId());

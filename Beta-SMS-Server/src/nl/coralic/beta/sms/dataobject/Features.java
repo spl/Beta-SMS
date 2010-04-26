@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Text;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -34,9 +35,9 @@ public class Features
 	private String email;
 	
 	@Persistent
-	private String debug;
+	private Text debug;
 
-	public Features(String content, Date date, ArrayList<String> comments, String status, String debug, String email)
+	public Features(String content, Date date, ArrayList<String> comments, String status, Text debug, String email)
 	{
 		this.content = content;
 		this.date = date;
@@ -106,12 +107,12 @@ public class Features
 		this.email = email;
 	}
 
-	public String getDebug()
+	public Text getDebug()
 	{
 		return debug;
 	}
 
-	public void setDebug(String debug)
+	public void setDebug(Text debug)
 	{
 		this.debug = debug;
 	}
