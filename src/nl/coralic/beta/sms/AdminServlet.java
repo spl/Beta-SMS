@@ -129,7 +129,14 @@ public class AdminServlet extends HttpServlet
 				out.println("</td>");
 
 				out.println("<td>");
-				out.println(fd.get(i).getDebug());
+				if(fd.get(i).getDebug() == null)
+				{
+				out.println("NULL");
+				}
+				else
+				{
+					out.println(fd.get(i).getDebug().getValue());
+				}
 				out.println("</td>");
 
 				out.println("<td>");
