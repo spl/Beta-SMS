@@ -48,10 +48,14 @@
 	<string name="SET_SAVE_SMS_TITLE_DIALOG">Add the send SMS to you Inbox.</string>
 	<string name="SET_DELETE_TEXT_TITLE">Delete text</string>
 	<string name="SET_DELETE_TEXT_TITLE_DIALOG">Clear all text after sms send.</string>
+	
+		<string name="SET_SHOW_BALANCE_TITLE">Show balance</string>
+	<string name="SET_SHOW_BALANCE_TITLE_DIALOG">Toggle show balance.</string>
 
 	<string name="MENU_INFO">Info</string>
 	<string name="MENU_SET">Settings</string>
 	<string name="MENU_FEATURE">Feature</string>
+	<string name="MENU_REQUEST">Request</string>
 	<string name="MENU_EXIT">Exit</string>
 
 	<string name="NO_USER">No username. \n</string>
@@ -66,6 +70,7 @@
 	<string name="SET_SERVICE_KEY">ServiceKey</string>
 	<string name="SET_SAVE_SMS_KEY">SaveSMSKey</string>
 	<string name="SET_DELETE_TEXT_KEY">DeleteTextKey</string>
+	<string name="SET_SHOW_BALANCE_KEY">ShowBalanceKey</string>
 
 	<string name="INFO">Beta-SMS application is made by Armin Čoralić and
 		is Open Source. If you wish to read more about the application or
@@ -87,4 +92,9 @@
 	
 	<string name="MAIN_TO_EMPTY">Phone number can not be empty.</string>
 	<string name="MAIN_SMS_EMPTY">SMS text can not be empty.</string>
+	
+	<string name="REQUEST_EMAIL">Email:</string>
+	<string name="REQUEST_TEXT">Text:</string>
+	<string name="REQUEST_TEXT_HINT">Your request text goes here...</string>
+	<string name="CHK_BOX_ATTACH_LOG">Attach log:</string>
 </resources>

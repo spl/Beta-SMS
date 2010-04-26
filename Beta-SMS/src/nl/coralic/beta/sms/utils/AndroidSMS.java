@@ -1,5 +1,9 @@
 package nl.coralic.beta.sms.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import nl.coralic.beta.sms.Beta_SMS;
 import nl.coralic.beta.sms.R;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -12,12 +16,12 @@ import android.widget.Toast;
 
 public class AndroidSMS
 {
-	Context context;
+	Beta_SMS context;
 	SMSHelper sms;
 	String phoneNumber;
 	String message;
 
-	public void sendSMS(Context cont, String phone, String data)
+	public void sendSMS(Beta_SMS cont, String phone, String data)
 	{
 		sms = new SMSHelper();
 		context = cont;
@@ -39,6 +43,13 @@ public class AndroidSMS
 				{
 					case Activity.RESULT_OK:
 						Toast.makeText(context, context.getString(R.string.SMS_SEND_SUCCESS), Toast.LENGTH_SHORT).show();
+						sms.addSMS(context.getContentResolver(), message, phoneNumber);
+						if (context.properties.getBoolean("DeleteTextKey", false))
+						{
+							// reset everything to empty
+							context.txtSmsText.setText("");
+							context.to.setText("");
+						}
 						break;
 					default:
 						Toast.makeText(context, context.getString(R.string.SMS_SEND_FAILED), Toast.LENGTH_SHORT).show();
@@ -55,7 +66,6 @@ public class AndroidSMS
 				{
 					case Activity.RESULT_OK:
 						Toast.makeText(context, context.getString(R.string.SMS_DELIVERED_SUCCESS), Toast.LENGTH_SHORT).show();
-						sms.addSMS(context.getContentResolver(), message, phoneNumber);
 						break;
 					case Activity.RESULT_CANCELED:
 						Toast.makeText(context, context.getString(R.string.SMS_DELIVERED_FAILED), Toast.LENGTH_SHORT).show();
@@ -65,6 +75,18 @@ public class AndroidSMS
 		}, new IntentFilter(DELIVERED));
 
 		SmsManager sms = SmsManager.getDefault();
-		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+		ArrayList<String> text = Utils.splitSmsTextTo160Chars(message);
+		if (text.size() > 1)
+		{
+			Iterator<String> i = text.iterator();
+			while (i.hasNext())
+			{
+				sms.sendTextMessage(phoneNumber, null, i.next(), sentPI, deliveredPI);
+			}
+		}
+		else
+		{
+			sms.sendTextMessage(phoneNumber, null, text.get(0), sentPI, deliveredPI);
+		}
 	}
 }

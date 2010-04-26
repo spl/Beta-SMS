@@ -10,7 +10,7 @@ public class FeatureRequestResponse extends Response
 	{
 		context = con;
 		// do something
-		if(!data.startsWith("Error:") && !data.startsWith("Fout:"))
+		if(data != null && !data.startsWith("Error:") && !data.startsWith("Fout:"))
 		{
 			if(data.equalsIgnoreCase("DONE"))
 			{

@@ -13,6 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
+import nl.coralic.beta.sms.log.Log;
+import nl.coralic.beta.sms.utils.constants.Const;
 import nl.coralic.beta.sms.utils.http.HttpHandler;
 
 /**
@@ -42,7 +44,7 @@ public class SendHandler
 		this.username = URLEncoder.encode(username);
 		this.from = URLEncoder.encode(from);
 		this.to = URLEncoder.encode(to);
-		this.text = Utils.splitSmsTextTo160Chars(URLEncoder.encode(text));
+		this.text = Utils.splitSmsTextTo160Chars(text);
 		if (url != null && !url.equalsIgnoreCase(""))
 		{
 			this.url = url;
@@ -59,7 +61,7 @@ public class SendHandler
 			while (i.hasNext())
 			{
 				String uri = "https://" + url + "/myaccount/sendsms.php?username=" + username + "&password=" + password + "&to=" + to + "&text="
-						+ i.next() + "&from=" + from;
+						+ URLEncoder.encode(i.next()) + "&from=" + from;
 				HttpHandler hh = new HttpHandler();
 				response = new Response(hh.send(uri, context), context); 
 				//if there is an error don't send others
@@ -73,21 +75,31 @@ public class SendHandler
 		else
 		{
 			String uri = "https://" + url + "/myaccount/sendsms.php?username=" + username + "&password=" + password + "&to=" + to + "&text="
-					+ text.get(0) + "&from=" + from;
+					+ URLEncoder.encode(text.get(0)) + "&from=" + from;
 			HttpHandler hh = new HttpHandler();
 			return new Response(hh.send(uri, context), context);
 		}
 	}
 
-	public FeatureRequestResponse sendFeatureRequest(Context context, String data)
+	public FeatureRequestResponse sendFeatureRequest(Context context, String data, String debug, String mail)
 	{
-		String uri = "http://betasmsserver.appspot.com/addfeaturerequest?HASH=99dae5fed1878dea1ee46a1bb0f8f149&DATA=" + URLEncoder.encode(data);
+		List<NameValuePair> postdata = new ArrayList<NameValuePair>();
+		postdata.add(new BasicNameValuePair("HASH", "99dae5fed1878dea1ee46a1bb0f8f149"));
+		postdata.add(new BasicNameValuePair("DATA", data));
+		postdata.add(new BasicNameValuePair("DEBUG", debug));
+		postdata.add(new BasicNameValuePair("MAIL", mail));
+		
+		String uri = "http://betasmsserver.coralic.nl/addfeaturerequest";
 		HttpHandler hh = new HttpHandler();
-		return new FeatureRequestResponse(hh.send(uri, context), context);
+		HttpClient httpclient = hh.getHttpClient();
+		FeatureRequestResponse f = new FeatureRequestResponse(hh.doPost(httpclient,uri,postdata), context);
+		httpclient.getConnectionManager().shutdown();	
+		return f;
 	}
 	
 	public String getBalance(String url, String user, String pass)
 	{
+		Log.logit(Const.TAG_SEND, "Try to get the balance.");
 		String returnValue = "*";
 		
 		List<NameValuePair> postdata = new ArrayList<NameValuePair>();
@@ -96,13 +108,17 @@ public class SendHandler
 		
 		HttpHandler hh = new HttpHandler();
 		HttpClient httpclient = hh.getHttpClient();
+		Log.logit(Const.TAG_SEND, "First call for balance.");
 		if(hh.doPost(httpclient,"https://"+url+"/myaccount/index.php?part=tplogin",postdata) != null)
 		{
+			Log.logit(Const.TAG_SEND, "Second call for balance.");
 			if(hh.doGet(httpclient, "https://"+url+"/myaccount/index.php?part=menu&justloggedin=true") != null)
 			{
+				Log.logit(Const.TAG_SEND, "Last call for balance.");
 				String data = hh.doGet(httpclient, "https://"+url+"/myaccount/contacts.php");
 				if(data != null)
 				{
+					Log.logit(Const.TAG_SEND, "Got anwser from contacts.php.");
 					returnValue = Utils.getBalance(data);
 				}
 			}
@@ -110,4 +126,6 @@ public class SendHandler
 		httpclient.getConnectionManager().shutdown();	
 		return returnValue;
 	}
+	
+	
 }

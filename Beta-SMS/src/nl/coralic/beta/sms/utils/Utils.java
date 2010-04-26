@@ -8,6 +8,7 @@ import nl.coralic.beta.sms.utils.constants.Const;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
+
 /**
  * @author "Armin Čoralić"
  */
@@ -15,6 +16,7 @@ public class Utils
 {
 	/**
 	 * Strips all the unnecessary things from the string containing a phone number
+	 * 
 	 * @param data
 	 * @return striped phone number
 	 */
@@ -22,16 +24,17 @@ public class Utils
 	{
 		return data.replace("sms:", "").replace(" ", "").replace("(0)", "").replace("-", "").replace(".", "").replace("(", "").replace(")", "");
 	}
-	
+
 	/**
 	 * Checks if all properties are filled if not it shows an message
+	 * 
 	 * @param context
 	 * @param properties
 	 * @return true or false if the properties are filled or not
 	 */
 	public static boolean checkForProperties(Context context, SharedPreferences properties)
 	{
-		
+
 		boolean isEveryPropertieFilled = true;
 		StringBuffer sb = new StringBuffer();
 		if (!properties.contains("UsernameKey") || properties.getString("UsernameKey", "").equalsIgnoreCase(""))
@@ -74,30 +77,48 @@ public class Utils
 			return false;
 		}
 	}
-	
+
 	public static ArrayList<String> splitSmsTextTo160Chars(String sms)
 	{
 		ArrayList<String> smsSplit = new ArrayList<String>();
-		if(sms.length() <= 160)
+		if (sms.length() <= 160)
 		{
 			smsSplit.add(sms);
 		}
+		else
+		{
+			while (true)
+			{
+				if (sms.length() > 160)
+				{
+					smsSplit.add(sms.substring(0, 160));
+					sms = sms.substring(160);
+				}
+				else
+				{
+					smsSplit.add(sms);
+					break;
+				}
+			}
+		}
 		return smsSplit;
 	}
-	
+
 	public static String getBalance(String data)
 	{
 		int firstposition = data.indexOf("balanceid");
-		if(firstposition != -1)
+		if (firstposition != -1)
 		{
-			String subString = data.substring(firstposition, firstposition+40);
+			Log.logit(Const.TAG_UTILS, "Balance is here!");
+			String subString = data.substring(firstposition, firstposition + 40);
 			System.out.println(subString);
 			int one = subString.lastIndexOf(";");
 			int two = subString.indexOf("<");
-			return subString.substring(one+1,two);
+			return subString.substring(one + 1, two);
 		}
 		else
 		{
+			Log.logit(Const.TAG_UTILS, "Balance is not here on the page!");
 			return "?";
 		}
 	}

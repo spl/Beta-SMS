@@ -1,3 +1,14 @@
+VERSION 2.0
+New layout
+You can select Beta-SMS as default app to send your SMS
+Show balance
+Widget show balance
+Auto complete contact
+SMS text counter
+Send normal sms too
+Send more than 160 chars(will be split and send separately)
+And much more
+
 VERSION 1.4
 Added Dutch language support.
 You can request features.

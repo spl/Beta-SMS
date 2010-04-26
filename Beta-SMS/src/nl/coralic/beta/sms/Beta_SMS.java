@@ -23,7 +23,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.provider.Contacts.People;
 import android.view.Menu;
@@ -45,8 +44,8 @@ public class Beta_SMS extends Activity
 
 	Intent intent;
 
-	AutoCompleteTextView to;
-	EditText txtSmsText;
+	public AutoCompleteTextView to;
+	public EditText txtSmsText;
 	TextView txtBalance;
 	Button send;
 	CheckBox chkSendNormal;
@@ -58,13 +57,13 @@ public class Beta_SMS extends Activity
 
 	AlertDialog chooseNumberAlert;
 	ProgressDialog showStatusAlert;
-	SharedPreferences properties;
+	public SharedPreferences properties;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		Debug.startMethodTracing("armin");
+
 		// Set the view
 		Log.logit(Const.TAG_MAIN, "Creating the view and the rest of the GUI.");
 		super.onCreate(savedInstanceState);
@@ -79,13 +78,14 @@ public class Beta_SMS extends Activity
 		txtSmsText.addTextChangedListener(new SmsTextCounter(txtTextCount));
 
 		txtBalance = (TextView) findViewById(R.id.txtBalance);
-		
-		//you need to read the properties before showing balance
+
+		Log.logit(Const.TAG_MAIN, "Read properties.");
+		// you need to read the properties before showing balance
 		properties = PreferenceManager.getDefaultSharedPreferences(Beta_SMS.this);
-		
-		//get the balance
+
+		// get the balance
 		showBalance();
-		
+
 		// check if the app is started from an intent (send sms) if so strip the number and show it in the to field
 		Intent recintent = getIntent();
 		if (recintent.getData() != null)
@@ -112,6 +112,7 @@ public class Beta_SMS extends Activity
 			}
 		});
 
+		//when send clicked
 		send.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v)
 			{
@@ -121,7 +122,6 @@ public class Beta_SMS extends Activity
 				}
 			}
 		});
-		Debug.stopMethodTracing();
 	}
 
 	/**
@@ -185,7 +185,9 @@ public class Beta_SMS extends Activity
 
 	/**
 	 * Checks if the data of the intent can be used
-	 * @param recintent Intent that is received
+	 * 
+	 * @param recintent
+	 *            Intent that is received
 	 */
 	private void checkDataIncomingIntent(Intent recintent)
 	{
@@ -222,6 +224,9 @@ public class Beta_SMS extends Activity
 			case R.id.settings:
 				startActivity(new Intent(this, Properties.class));
 				return true;
+			case R.id.request:
+				startActivity(new Intent(this, Request.class));
+				return true;
 			case R.id.quit:
 				this.finish();
 				return true;
@@ -234,98 +239,108 @@ public class Beta_SMS extends Activity
 	 */
 	private void onSend()
 	{
-		if(!checkIfFieldAreEmpty())
+		if (!checkIfFieldAreEmpty())
 		{
 			return;
 		}
-		
-		if(chkSendNormal.isChecked())
+
+		if (chkSendNormal.isChecked())
 		{
+			Log.logit(Const.TAG_MAIN, "Send normal sms not trough betamax.");
 			AndroidSMS sms = new AndroidSMS();
 			sms.sendSMS(Beta_SMS.this, to.getText().toString(), txtSmsText.getText().toString());
 		}
 		else
 		{
-		sh = new SendHandler(properties.getString("PasswordKey", ""), properties.getString("UsernameKey", ""), properties.getString("PhoneKey", ""),
-				to.getText().toString(), txtSmsText.getText().toString(), properties.getString("ServiceKey", ""));
-		showStatusAlert = new ProgressDialog(this);
-		showStatusAlert.setMessage(getString(R.string.ALERT_SEND_MSG));
-		showStatusAlert.setIndeterminate(true);
+			sh = new SendHandler(properties.getString("PasswordKey", ""), properties.getString("UsernameKey", ""), properties.getString("PhoneKey",
+					""), to.getText().toString(), txtSmsText.getText().toString(), properties.getString("ServiceKey", ""));
+			showStatusAlert = new ProgressDialog(this);
+			showStatusAlert.setMessage(getString(R.string.ALERT_SEND_MSG));
+			showStatusAlert.setIndeterminate(true);
 
-		AsyncTask<Void, Void, Response> task = new AsyncTask<Void, Void, Response>() {
-			@Override
-			protected void onPreExecute()
-			{
-				showStatusAlert.show();
-			}
-
-			@Override
-			protected Response doInBackground(Void... v)
-			{
-				return sh.send(getApplicationContext());
-			}
-
-			@Override
-			protected void onPostExecute(Response anwser)
-			{
-				showStatusAlert.dismiss();
-				if (anwser.isSucceful() == true)
+			AsyncTask<Void, Void, Response> task = new AsyncTask<Void, Void, Response>() {
+				@Override
+				protected void onPreExecute()
 				{
-					Toast.makeText(Beta_SMS.this, anwser.getResponse(), Toast.LENGTH_LONG).show();
-					SMSHelper sms = new SMSHelper();
-					if (properties.getBoolean("SaveSMSKey", false))
+					showStatusAlert.show();
+				}
+
+				@Override
+				protected Response doInBackground(Void... v)
+				{
+					return sh.send(getApplicationContext());
+				}
+
+				@Override
+				protected void onPostExecute(Response anwser)
+				{
+					showStatusAlert.dismiss();
+					if (anwser.isSucceful() == true)
 					{
-						sms.addSMS(getContentResolver(), txtSmsText.getText().toString(), to.getText().toString());
+						Toast.makeText(Beta_SMS.this, anwser.getResponse(), Toast.LENGTH_LONG).show();
+						SMSHelper sms = new SMSHelper();
+						if (properties.getBoolean("SaveSMSKey", false))
+						{
+							sms.addSMS(getContentResolver(), txtSmsText.getText().toString(), to.getText().toString());
+						}
+						if (properties.getBoolean("DeleteTextKey", false))
+						{
+							// reset everything to empty
+							txtSmsText.setText("");
+							to.setText("");
+						}
 					}
-					if (properties.getBoolean("DeleteTextKey", false))
+					else
 					{
-						// reset everything to empty
-						txtSmsText.setText("");
-						to.setText("");
+						Toast.makeText(Beta_SMS.this, anwser.getError(), Toast.LENGTH_LONG).show();
 					}
 				}
-				else
-				{
-					Toast.makeText(Beta_SMS.this, anwser.getError(), Toast.LENGTH_LONG).show();
-				}
-			}
-		};
-		task.execute();
+			};
+			task.execute();
 		}
 	}
-	
+
 	private boolean checkIfFieldAreEmpty()
 	{
-		if(to.getText().toString().length() < 1)
+		Log.logit(Const.TAG_MAIN, "Checking to see if all fields are filled.");
+		if (to.getText().toString().length() < 1)
 		{
 			Toast.makeText(Beta_SMS.this, getText(R.string.MAIN_TO_EMPTY), Toast.LENGTH_SHORT).show();
+			Log.logit(Const.TAG_MAIN, "To empty.");
 			return false;
 		}
-		if(txtSmsText.getText().toString().length() < 1)
+		if (txtSmsText.getText().toString().length() < 1)
 		{
 			Toast.makeText(Beta_SMS.this, getText(R.string.MAIN_SMS_EMPTY), Toast.LENGTH_SHORT).show();
+			Log.logit(Const.TAG_MAIN, "SMS text empty.");
 			return false;
 		}
 		return true;
 	}
-	
+
 	private void showBalance()
 	{
-		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 
-			@Override
-			protected String doInBackground(Void... v)
-			{
-				SendHandler sh = new SendHandler();
-				return sh.getBalance(properties.getString("ServiceKey", ""), properties.getString("UsernameKey", ""),properties.getString("PasswordKey", ""));				
-			}
+		if (properties.getBoolean("ShowBalanceKey", false))
+		{
+			Log.logit(Const.TAG_MAIN, "User allowes for checking saldo so go get it.");
+			AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 
-			@Override
-			protected void onPostExecute(String anwser)
-			{
-				txtBalance.setText(anwser);
-			}
-		};
-		task.execute();
+				@Override
+				protected String doInBackground(Void... v)
+				{
+					SendHandler sh = new SendHandler();
+					return sh.getBalance(properties.getString("ServiceKey", ""), properties.getString("UsernameKey", ""), properties.getString(
+							"PasswordKey", ""));
+				}
+
+				@Override
+				protected void onPostExecute(String anwser)
+				{
+					txtBalance.setText(anwser);
+				}
+			};
+			task.execute();
+		}
 	}
 }

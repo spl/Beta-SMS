@@ -15,12 +15,15 @@
 	<PreferenceCategory android:title="@string/SET_SERVICE">
 		<EditTextPreference android:key="@string/SET_SERVICE_KEY"
 			android:title="@string/SET_SERVICE_TITLE" android:dialogTitle="@string/SET_SERVICE_TITLE_DIALOG"
-			android:summary="@string/SET_SERVICE_TITLE_HINT" android:defaultValue="www.webcalldirect.com" />
+			android:summary="@string/SET_SERVICE_TITLE_HINT"
+			android:defaultValue="www.webcalldirect.com" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/SET_SAVE_SMS">
 		<CheckBoxPreference android:key="@string/SET_SAVE_SMS_KEY"
 			android:title="@string/SET_SAVE_SMS_TITLE" android:summary="@string/SET_SAVE_SMS_TITLE_DIALOG" />
-					<CheckBoxPreference android:key="@string/SET_DELETE_TEXT_KEY"
+		<CheckBoxPreference android:key="@string/SET_DELETE_TEXT_KEY"
 			android:title="@string/SET_DELETE_TEXT_TITLE" android:summary="@string/SET_DELETE_TEXT_TITLE_DIALOG" />
+		<CheckBoxPreference android:key="@string/SET_SHOW_BALANCE_KEY"
+			android:title="@string/SET_SHOW_BALANCE_TITLE" android:summary="@string/SET_SHOW_BALANCE_TITLE_DIALOG" />
 	</PreferenceCategory>
 </PreferenceScreen>
