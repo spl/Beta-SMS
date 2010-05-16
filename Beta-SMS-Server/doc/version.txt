@@ -1,3 +1,6 @@
+VERSION 3
+- GWT edition
+
 VERSION 2.1
 - Transformed to JSP files
 - You can add a ned issue online
