@@ -1,4 +1,4 @@
-package nl.coralic.beta.sms;
+package nl.coralic.beta.sms.server.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,11 +7,13 @@ import java.util.Date;
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
 
+import nl.coralic.beta.sms.server.dataobject.Comment;
+import nl.coralic.beta.sms.server.dataobject.Issues;
+import nl.coralic.beta.sms.server.db.PMF;
+import nl.coralic.beta.sms.server.utils.Utils;
+
 import com.google.appengine.api.datastore.Text;
 
-import nl.coralic.beta.sms.dataobject.Issues;
-import nl.coralic.beta.sms.db.PMF;
-import nl.coralic.beta.sms.utils.Utils;
 
 @SuppressWarnings("serial")
 public class AddIssueServlet extends HttpServlet
@@ -36,24 +38,15 @@ public class AddIssueServlet extends HttpServlet
 		String DEBUG = req.getParameter("DEBUG");
 		String MAIL = req.getParameter("MAIL");
 		String TYPE = req.getParameter("TYPE");
-		String WEB = req.getParameter("WEB");
-		System.out.println("WEB: " + WEB);
 		if (HASH == null || !HASH.equalsIgnoreCase("99dae5fed1878dea1ee46a1bb0f8f149") || DATA == null)
 		{
-			if(WEB != null && WEB.equalsIgnoreCase("true"))
-			{
-				resp.sendRedirect("http://betasmsserver.coralic.nl");
-			}
-			else
-			{
 				resp.getWriter().println("ERROR");
-			}
-			return;
 		}
 
 		// Save data to db
 		Date date = new Date();
-		ArrayList<String> tmp = new ArrayList<String>();
+		ArrayList<Comment> tmp = new ArrayList<Comment>();
+		
 		System.out.println("Create object");
 		if (DEBUG == null)
 		{
@@ -78,14 +71,7 @@ public class AddIssueServlet extends HttpServlet
 			System.out.println("Close pm");
 			pm.close();
 		}
-		if(WEB != null && WEB.equalsIgnoreCase("true"))
-		{
-			resp.sendRedirect("issue.jsp?ID="+issue.getKey().getId());
-		}
-		else
-		{
-			resp.getWriter().println(issue.getKey().getId());
-		}
+		resp.getWriter().println(issue.getKey().getId());
 		return;
 	}
 }
