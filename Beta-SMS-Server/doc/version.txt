@@ -1,3 +1,7 @@
+VERSION 2.1
+- Transformed to JSP files
+- You can add a ned issue online
+
 VERSION 2.0
 - Can show all issues
 - Can show one issue

@@ -3,19 +3,18 @@ package nl.coralic.beta.sms;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
 
 import com.google.appengine.api.datastore.Text;
 
-import nl.coralic.beta.sms.dataobject.Features;
+import nl.coralic.beta.sms.dataobject.Issues;
 import nl.coralic.beta.sms.db.PMF;
 import nl.coralic.beta.sms.utils.Utils;
 
 @SuppressWarnings("serial")
-public class AddFeatureRequestServlet extends HttpServlet
+public class AddIssueServlet extends HttpServlet
 {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
@@ -36,9 +35,19 @@ public class AddFeatureRequestServlet extends HttpServlet
 		String DATA = req.getParameter("DATA");
 		String DEBUG = req.getParameter("DEBUG");
 		String MAIL = req.getParameter("MAIL");
+		String TYPE = req.getParameter("TYPE");
+		String WEB = req.getParameter("WEB");
+		System.out.println("WEB: " + WEB);
 		if (HASH == null || !HASH.equalsIgnoreCase("99dae5fed1878dea1ee46a1bb0f8f149") || DATA == null)
 		{
-			resp.getWriter().println("ERROR");
+			if(WEB != null && WEB.equalsIgnoreCase("true"))
+			{
+				resp.sendRedirect("http://betasmsserver.coralic.nl");
+			}
+			else
+			{
+				resp.getWriter().println("ERROR");
+			}
 			return;
 		}
 
@@ -46,18 +55,22 @@ public class AddFeatureRequestServlet extends HttpServlet
 		Date date = new Date();
 		ArrayList<String> tmp = new ArrayList<String>();
 		System.out.println("Create object");
-		Features fd = new Features(DATA, date, tmp, "Unknown", new Text(DEBUG), MAIL);
+		if (DEBUG == null)
+		{
+			DEBUG = "";
+		}
+		Issues issue = new Issues(DATA, date, tmp, "Unknown", new Text(DEBUG), MAIL, TYPE);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try
 		{
 			System.out.println("Persist object");
-			fd = pm.makePersistent(fd);
+			issue = pm.makePersistent(issue);
 			Utils utils = new Utils();
-			if (fd.getEmail() != null && !fd.getEmail().equalsIgnoreCase(""))
+			if (issue.getEmail() != null && !issue.getEmail().equalsIgnoreCase(""))
 			{
 				System.out.println("Try to send mail");
-				utils.sendMail(String.valueOf(fd.getKey().getId()), fd.getEmail());
+				utils.sendMail(String.valueOf(issue.getKey().getId()), issue.getEmail());
 			}
 		}
 		finally
@@ -65,7 +78,14 @@ public class AddFeatureRequestServlet extends HttpServlet
 			System.out.println("Close pm");
 			pm.close();
 		}
-		resp.getWriter().println(fd.getKey().getId());
+		if(WEB != null && WEB.equalsIgnoreCase("true"))
+		{
+			resp.sendRedirect("issue.jsp?ID="+issue.getKey().getId());
+		}
+		else
+		{
+			resp.getWriter().println(issue.getKey().getId());
+		}
 		return;
 	}
 }

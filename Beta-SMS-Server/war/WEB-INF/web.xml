@@ -5,16 +5,8 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
-		<servlet-name>AddFeatureRequestServlet</servlet-name>
-		<servlet-class>nl.coralic.beta.sms.AddFeatureRequestServlet</servlet-class>
-	</servlet>
-		<servlet>
-		<servlet-name>ShowAllServlet</servlet-name>
-		<servlet-class>nl.coralic.beta.sms.ShowAllServlet</servlet-class>
-	</servlet>
-			<servlet>
-		<servlet-name>GetFeatureServlet</servlet-name>
-		<servlet-class>nl.coralic.beta.sms.GetFeatureServlet</servlet-class>
+		<servlet-name>AddIssueServlet</servlet-name>
+		<servlet-class>nl.coralic.beta.sms.AddIssueServlet</servlet-class>
 	</servlet>
 				<servlet>
 		<servlet-name>AddCommentServlet</servlet-name>
@@ -25,20 +17,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-class>nl.coralic.beta.sms.AdminServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AddFeatureRequestServlet</servlet-name>
-		<url-pattern>/addfeaturerequest</url-pattern>
-	</servlet-mapping>
-		<servlet-mapping>
-			<servlet-name>AdminServlet</servlet-name>
-		<url-pattern>/admin</url-pattern>
-	</servlet-mapping>
-		<servlet-mapping>
-		<servlet-name>ShowAllServlet</servlet-name>
-		<url-pattern>/showall</url-pattern>
-	</servlet-mapping>
-			<servlet-mapping>
-		<servlet-name>GetFeatureServlet</servlet-name>
-		<url-pattern>/getfeature</url-pattern>
+		<servlet-name>AddIssueServlet</servlet-name>
+		<url-pattern>/addissue</url-pattern>
 	</servlet-mapping>
 				<servlet-mapping>
 		<servlet-name>AddCommentServlet</servlet-name>
@@ -49,7 +29,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/admin</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>/showall</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	   <security-constraint>
         <web-resource-collection>
