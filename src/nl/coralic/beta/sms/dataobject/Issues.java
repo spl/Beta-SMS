@@ -13,7 +13,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class Features
+public class Issues
 {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -35,9 +35,12 @@ public class Features
 	private String email;
 	
 	@Persistent
+	private String type;
+	
+	@Persistent
 	private Text debug;
 
-	public Features(String content, Date date, ArrayList<String> comments, String status, Text debug, String email)
+	public Issues(String content, Date date, ArrayList<String> comments, String status, Text debug, String email, String type)
 	{
 		this.content = content;
 		this.date = date;
@@ -45,6 +48,7 @@ public class Features
 		this.status = status;
 		this.debug = debug;
 		this.email = email;
+		this.type = type;
 	}
 
 	public Key getKey()
@@ -115,5 +119,15 @@ public class Features
 	public void setDebug(Text debug)
 	{
 		this.debug = debug;
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 }
