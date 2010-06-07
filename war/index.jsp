@@ -55,7 +55,7 @@ This is an list of all the issues and feature requests for Beta-SMS. If you wish
 						else
 						{
 				%>
-				<td><%=showall.getAllIssues().get(i).getStatus().substring(0, 40)%></td>
+				<td><%=showall.getAllIssues().get(i).getContent().substring(0, 40)%></td>
 				<%
 					}
 				%>
